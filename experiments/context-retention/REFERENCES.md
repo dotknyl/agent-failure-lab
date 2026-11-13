@@ -15,7 +15,8 @@ redistributed. The four repositories below are MIT-licensed.
 The readable companion page for the cookbook (platform.claude.com) was not fetched separately; the notebook at
 the pinned commit was read directly. The `openai` Python SDK actually installed (3.50.0, see `uv.lock`) was
 inspected for `chat.completions.create/stream`, `stream_options`, `max_completion_tokens`, usage in streams,
-and the exception classes, instead of relying on documentation. That inspection showed that the
+and the exception classes, instead of relying on documentation. (This inspection covered Chat Completions
+only, not the Responses API methods.) That inspection showed that the
 `chat.completions.stream()` helper's `get_final_completion()` raises `LengthFinishReasonError` /
 `ContentFilterFinishReasonError` on those finish reasons (`openai/lib/_parsing/_completions.py`), so the Lab
 accumulates raw chunks from `create(stream=True)` instead.
@@ -42,7 +43,8 @@ accumulates raw chunks from `create(stream=True)` instead.
 - **Excluded / changed:** the customer-service ticket scenario (and its classification steps); the server-side
   `compaction` block (`compact-2026-09-04` beta of the Messages API). At the pinned commit the notebook reads
   that block's summary as text (`block.content`), so it is inspectable. It was not used because it belongs to a
-  different API than the single integration chosen here (Chat Completions), and because application-managed
+  different API than the OpenAI integrations used here (Chat Completions, and later a stateless Responses
+  integration, which the pilot used), and because application-managed
   summarization lets the Lab freeze the summary prompt, record the summarizer's exact input and usage as
   ordinary requests, and keep recent tool groups verbatim;
   replacing the *entire* history with the summary (here the most recent complete tool groups are kept
@@ -54,9 +56,11 @@ accumulates raw chunks from `create(stream=True)` instead.
 - **Adopted:** the explicit memory-strategy distinction. Client-managed history (`to_input_list()`, sessions)
   versus server-managed state (`conversation_id`, `previous_response_id`) in which the request carries only a
   delta, and `OpenAIResponsesCompactionSession`, which rewrites stored history via `responses.compact`. This is
-  the reason the Lab uses the stateless Chat Completions API with locally owned history: the recorded payload is
-  the whole context. Also adopted: retries are opt-in and explicit; tool output is appended and the loop re-runs
-  until a reply without tool calls.
+  the reason the Lab owns the history locally and sends all of it on every request: originally through the
+  stateless Chat Completions API, and later also through the Responses API with `store=false` and no
+  `previous_response_id` (the integration the pilot used), so the recorded payload is the whole readable context.
+  Also adopted: retries are opt-in and explicit; tool output is appended and the loop re-runs until a reply
+  without tool calls.
 - **Excluded:** the SDK itself as a dependency, sessions/persistence, handoffs and nested handoff history,
   multi-agent orchestration, Responses-API websocket transport, durable-execution integrations.
 

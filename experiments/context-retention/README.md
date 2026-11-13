@@ -6,22 +6,24 @@ critical evidence lost during compaction, or was it still in the request and use
 This Lab runs one agent through a read-only API incident investigation with automatic, model-generated
 compaction, records exactly what reached the model at every step, and lets you tell those two cases apart.
 
-> **Status: no real model runs yet. Every finding is unmeasured.** The fixture, harness, scoring and offline
-> checks are complete. Recorded traces and results will be added only after an authorized live pilot (see
-> [Pilot sequence](#pilot-sequence)). Nothing in this repository is a benchmark result.
+> **Status: small pilot complete, reviewed and recorded (2026-11-13). Experimental research, not a validated
+> benchmark, and not published as an AgentProbe Lab.** One focused sanity run and three natural investigations
+> with `gpt-6-luna` on one synthetic incident. Results and limitations: [`PILOT_SUMMARY.md`](PILOT_SUMMARY.md).
+> Recordings: [`runs/`](runs/). Generated table: [`REPORT.md`](REPORT.md) / [`results.json`](results.json).
+> Nothing here estimates a failure rate or generalizes beyond this model, incident and configuration.
 >
 > Two kinds of numbers appear here; do not mix them. **Fixture properties** (simulated checkout latency, attempt
 > durations, alert times; `gold/.../derived.json`, `explanation.md`) describe the synthetic incident and are known
-> by construction. **Agent outcomes** (task success, compactions, re-reads, tokens, cost) exist only in recorded
-> live runs and are currently unmeasured.
+> by construction. **Agent outcomes** (task success, compactions, re-reads, tokens, cost) come only from the
+> recorded live runs in `runs/`.
 
 ## Three ways to use it
 
 | You want to... | You need | What you get |
 |---|---|---|
-| **Read / inspect** | nothing | `REPORT.md`, recorded traces in `runs/`, summaries before/after each compaction, the audit and the rubric. *Pending: no real runs are recorded yet.* |
-| **Replay / test offline** | Python 3.12 + [uv](https://docs.astral.sh/uv/) | `ctxlab replay` re-runs a recording against the same harness and requires byte-identical requests; tests validate fixture, tools, messages, compaction, termination and scoring. No API key, no network, no cost. |
-| **Run live** | your own API key and an explicit budget | New runs with a real model. Results can differ from recorded ones (model version, sampling). There is no shared key or hosted endpoint. |
+| **Read / inspect** | nothing | [`PILOT_SUMMARY.md`](PILOT_SUMMARY.md), [`REPORT.md`](REPORT.md), recorded traces in [`runs/`](runs/), summaries before/after each compaction, the audit, the manual reviews and the rubric. |
+| **Replay / test offline** | Python 3.12 + [uv](https://docs.astral.sh/uv/) | `ctxlab replay` re-runs a recording against the same harness, feeding back the *recorded* model responses, and requires byte-identical requests; tests validate fixture, tools, messages, compaction, termination and scoring. No API key, no network, no cost. Replay checks the harness and the trace; it does not run the model again. |
+| **Run live** | your own API key and an explicit budget | New runs with a real model: a new inference, not a replay. Results can differ from recorded ones (model version, sampling). There is no shared key or hosted endpoint. |
 
 ## Quick start (offline)
 
@@ -33,16 +35,21 @@ uv run ctxlab fixture verify          # bundle regenerates byte-identically, sou
 uv run ctxlab tools list              # the agent's tools, called by you
 uv run ctxlab tools search "timeout_ms=8000 in:payment-client-log"
 uv run ctxlab tools read config-diff --offset 25 --limit 20
-uv run ctxlab report                  # aggregates real runs only (currently: none)
 ```
 
-For a recorded run `runs/<run-id>/`:
+`ctxlab report` aggregates real runs into `REPORT.md` and `results.json`; it rewrites both files, so the committed
+versions change if you run it.
+
+For a recorded run `runs/<run-id>/` (for example `runs/20261113T163002Z-natural-8ea26b`):
 
 ```bash
 uv run ctxlab inspect runs/<run-id>   # requests, estimates vs usage, compactions, fact audit, re-read classes
 uv run ctxlab replay  runs/<run-id>   # offline re-execution; fails on the first differing payload
 uv run ctxlab score   runs/<run-id>   # rubric indicators + review.json template for manual verdicts
 ```
+
+`inspect` is read-only unless given `--write` (which writes `audit.json`). `score` rewrites `score.json` in the
+run directory; an existing `review.json` is never overwritten.
 
 ## The incident (what the agent sees)
 
@@ -104,20 +111,28 @@ before every agent request:
 stop on a reply without tool calls, or on a named limit/error
 ```
 
-- **Provider:** one integration, OpenAI **Chat Completions** via the `openai` SDK with a configurable base
-  URL. It is stateless: the recorded payload *is* the model's context. Server-managed state
-  (`previous_response_id`, conversations) was not used because the request then carries only a delta.
+- **Provider:** two integrations via the `openai` SDK with a configurable base URL, selected by
+  `provider.integration`: OpenAI **Chat Completions** (`openai-chat-completions`, the config default) and the
+  OpenAI **Responses API** (`openai-responses`). Both are used statelessly: the full history is sent on every
+  request, so the recorded payload *is* the model's readable context. Server-managed state
+  (`previous_response_id`, conversations) is not used because the request then carries only a delta; the
+  Responses integration sends `store=false`. **The recorded pilot used the Responses integration** (see
+  [design decisions](#design-decisions-that-differ-from-or-sharpen-the-research-brief-revision-4)); Chat
+  Completions is covered by the offline tests, and its only live use was the first endpoint probe, which the
+  provider rejected (HTTP 400, see `runs/_probes/`).
 - **Why application-managed summarization rather than a hosted compaction feature:** hosted compaction is tied
   to a specific API (in the Anthropic cookbook at the pinned commit, a beta of the Messages API whose `compaction`
   block does carry readable summary text; OpenAI's `responses.compact` belongs to the Responses API and was not
-  verified here). Neither is part of Chat Completions, the single integration chosen. Doing it in the
+  verified or used here). Chat Completions, the integration first chosen, has no such feature, and the Lab uses
+  the same application-managed compaction for both integrations. Doing it in the
   application also lets the Lab freeze and hash the summarization prompt, record the summarizer's exact input
   transcript and output as ordinary requests with their own usage, trigger from a pre-send estimate, and keep the
   most recent tool groups verbatim. It is a design choice for observability and control, not a claim that
   hosted summaries are unreadable.
 - **Retries:** SDK retries are disabled (`max_retries=0`); the runner retries explicitly (`provider.max_retries`,
   default 1, only on timeouts, connection errors and 408/409/429/5xx) and records each attempt. Streaming is a
-  config flag (`stream_options.include_usage`).
+  config flag for Chat Completions only (`stream_options.include_usage`); the Responses integration is
+  non-streamed (preflight rejects `stream = true` with it).
 - **Why not an agent framework:** the behaviour under study (what is sent, when and how it is compacted) is
   the code here, in two small modules (`runner.py`, `history.py`). A framework would hide it.
 - **Token estimate:** a character heuristic (`chars_per_token`, default 3.0), with no tokenizer download. Every
@@ -206,8 +221,25 @@ context rot: the conditions differ in tools, evidence selection, length and numb
 
 ## Pilot sequence
 
-Not run yet. Requires the owner's approval of a model and a total budget. The probe, every run, every summary
-call and every retry draw on **one** pilot budget (`budget.pilot_budget_usd`; see the ledger below).
+**Completed on 2026-11-13** with the owner's approval of the model and a $3 total budget. The planned sequence is
+kept below. What actually ran, from the manifests in `runs/`:
+
+- **Probes (`runs/_probes/`):** probe 1 (`gpt-5.6-luna`, Chat Completions) was rejected with HTTP 400 because
+  function tools with reasoning effort are not supported there, which led to the Responses integration (see
+  [design decisions](#design-decisions-that-differ-from-or-sharpen-the-research-brief-revision-4)). Probe 2
+  (`gpt-6-luna`, Responses) returned a tool call, accepted the tool result and reported usage, but returned no
+  reasoning item. Probe 3 (same model and integration) also confirmed that encrypted reasoning is returned and
+  accepted when carried back.
+- **Focused sanity run** (`runs/20261113T162558Z-focused-ea1d97`): run before calibration
+  (`chars_per_token` 3.0, `compaction_threshold_tokens` 30,000, which a single request never reaches).
+- **Three natural runs** with one identical configuration (same `config_sha256`), after calibrating
+  `chars_per_token` to 2.12 from the focused run. All three ended with `final_answer`, and compaction fired in
+  every one (5 compactions in total).
+- Total cost upper bound: $0.058, including the probes and all summary calls. Results:
+  [`PILOT_SUMMARY.md`](PILOT_SUMMARY.md).
+
+The probe, every run, every summary call and every retry draw on **one** pilot budget
+(`budget.pilot_budget_usd`; see the ledger below).
 
 0. `uv run ctxlab fixture verify && uv run pytest` (offline; passing; also in CI), then `ctxlab preflight`.
 1. **Endpoint probe:** `ctxlab live probe`. Two small requests: tool call returned, tool result accepted, usage
@@ -224,7 +256,8 @@ call and every retry draw on **one** pilot budget (`budget.pilot_budget_usd`; se
 
 If an agent solves the task before any compaction, keep the run and report that compaction was not exercised;
 do not weaken search, raise read costs or force calls. `ctxlab live continue --from runs/<id> --at-request N`
-(same frozen request) is reserved for a later, finding-driven comparison; it is not part of this pilot.
+(same frozen request) is reserved for a later, finding-driven comparison; it was not part of this pilot. It
+sends the frozen request to the model again, so it is a new, paid inference, not a replay.
 
 ## Live runs: configuration and cost controls
 
@@ -254,7 +287,8 @@ uv run ctxlab live run --condition natural --config configs/live.local.toml --co
   the model and budget (who and when); preflight requires it.
 - Output caps (`max_output_tokens` 4000, `summary_max_output_tokens` 2000 by default) may be too low for
   reasoning models, whose hidden reasoning counts against the same limit. Settle them from the probe and the
-  sanity run; truncation is recorded (`final_answer_truncated`, `summary_truncated`), never hidden.
+  sanity run; truncation is recorded (`final_answer_truncated`, `summary_truncated`), never hidden. The pilot
+  used 12,000 and 6,000; no answer or summary was truncated.
 
 ## Choosing the compaction threshold
 
@@ -262,6 +296,20 @@ The trigger is `estimated payload + max_output_tokens >= compaction_threshold_to
 **input trigger** (history size at which compaction fires) plus the output reserve:
 `compaction_threshold_tokens = input_trigger + max_output_tokens`. It is separate from the model's native window,
 which is recorded alongside.
+
+**Pilot setting (authoritative values are in each run's `manifest.json`).** The three natural runs used
+`compaction_threshold_tokens` 37,000 = an input trigger of 25,000 estimated tokens + `max_output_tokens` 12,000,
+with `chars_per_token` 2.12 (calibrated on the focused run), `keep_recent_groups` 2, `retain_budget_tokens` 8,500
+and `summary_max_output_tokens` 6,000. In all five compactions only the latest complete tool group fit the
+retain budget (`retained_groups` 1). Estimated context right after a compaction was 9.5K-24.8K. The model's
+documented native window is 922,000 tokens, so this threshold is deliberately far below it: a disclosed **stress
+setting** that makes compaction happen, not the model's limit. The calibrated estimate over-counted on the natural
+runs, so compaction fired at roughly 20-29K actual input tokens (see `PILOT_SUMMARY.md`, Limitations).
+
+### Pre-pilot design (historical)
+
+The analysis and recommendation below were written before any live run, at the default 3.0 chars/token, and are
+kept for the reasoning behind a reduced trigger. The pilot used the values above instead.
 
 Measured on this fixture (estimated tokens at 3 chars/token):
 
@@ -286,16 +334,23 @@ setting**. Recommended input trigger: **18K estimated tokens**:
 - it bounds per-request input to ~18K (+ output), which keeps per-run cost predictable: roughly 0.15-0.5M input
   tokens for a natural run of 15-30 requests, plus summary calls.
 
-So `compaction_threshold_tokens = 18000 + max_output_tokens`, with `retain_budget_tokens = 6000` and
-`keep_recent_groups = 2`. **Calibration:** the focused run's single request reports the estimate next to the
-provider's `prompt_tokens`. If the ratio is outside 0.8-1.25, set `chars_per_token = 3.0 × estimate /
-prompt_tokens` before the first natural run, and keep everything fixed for all natural runs.
+So the pre-pilot recommendation was `compaction_threshold_tokens = 18000 + max_output_tokens`, with
+`retain_budget_tokens = 6000` and `keep_recent_groups = 2`. **Calibration:** the focused run's single request
+reports the estimate next to the provider's `prompt_tokens`. If the ratio is outside 0.8-1.25, set
+`chars_per_token = 3.0 × estimate / prompt_tokens` before the first natural run, and keep everything fixed for
+all natural runs. (In the pilot the ratio was 0.708, giving 2.12.)
 
 ## Limitations
+
+The pilot-specific limitations (sample size, calibration, re-read prompting, encrypted reasoning, literal-probe
+false alarms, assistant-drafted review) are listed in [`PILOT_SUMMARY.md`](PILOT_SUMMARY.md#limitations).
+General limitations of the Lab:
 
 - One synthetic incident, one fixture version. Nothing here generalizes to other tasks or models by itself.
 - Token counts before sending are heuristic; provider usage is authoritative and recorded.
 - Fact probes are literal. Paraphrased facts in summaries need manual review.
+- With the Responses integration and reasoning enabled, each request carries encrypted reasoning items that are
+  recorded but not readable, so part of every such request is not auditable.
 - Provider-side context handling is invisible. An "OpenAI-compatible" endpoint may differ in tool calling,
   usage reporting or streaming; `ctxlab live probe` checks the minimum.
 - Model outputs are stochastic. Reruns are not expected to match bit for bit; `replay` checks the harness, not
@@ -322,9 +377,9 @@ prompt_tokens` before the first natural run, and keep everything fixed for all n
   `reread_after_compaction` numbers with that in mind. The prompts are **frozen as v1 for the pilot**: their
   hashes are pinned in `tests/test_pilot_readiness.py` and recorded in every manifest; any change needs a new
   version. No separate no-nudge branch is planned.
-- **Streaming** is accumulated from raw chunks (`create(stream=True)`), not through the SDK's parsing stream
-  helper. That helper raises on `finish_reason` `length`/`content_filter`, which would turn a truncated answer
-  or summary into a provider error and lose its text.
+- **Streaming** (Chat Completions only) is accumulated from raw chunks (`create(stream=True)`), not through
+  the SDK's parsing stream helper. That helper raises on `finish_reason` `length`/`content_filter`, which would
+  turn a truncated answer or summary into a provider error and lose its text.
 - **Second integration: Responses API, for tools + reasoning.** On 2026-11-13 the probe got HTTP 400 from
   `/v1/chat/completions` ("Function tools with reasoning_effort are not supported for gpt-5.6-luna ... use
   /v1/responses or set reasoning_effort to 'none'"), and OpenAI's GPT-6 guide says Chat Completions does not
@@ -344,9 +399,10 @@ prompt_tokens` before the first natural run, and keep everything fixed for all n
   - Their size enters the token estimate as the provider-reported reasoning tokens of the response that produced
     them.
   - Reasoning is never carried between runs: each run starts from the pinned system prompt and task.
-    (`live continue` replays a recorded request exactly, including any reasoning items in it; it is not part of
-    the pilot.)
-- **Pilot model:** `gpt-6-luna` on OpenAI's API, Responses integration, `reasoning_effort = "medium"`.
+    (`live continue` re-sends a recorded request exactly, including any reasoning items in it, as a new model
+    inference; it was not part of the pilot.)
+- **Pilot model:** `gpt-6-luna` on OpenAI's API, Responses integration, `store=false`,
+  `reasoning_effort = "medium"`, for the focused run and all three natural runs.
   `ctxlab live probe` (passed 2026-11-13) requires encrypted reasoning to come back and a follow-up request
   carrying it to be accepted. The model does not always reason on a trivial step (`reasoning_tokens` 0, no
   reasoning item), which the probe allows.
@@ -362,6 +418,8 @@ gold/checkout-latency-v1/          rubric, facts, support lines, derived numbers
 src/ctxlab/                        fixture_gen, artifacts (tools), history, runner, client, trace, audit, scoring,
                                    report, experiment, probe, config, cli
 tests/                             offline tests (mocks live here only)
-runs/                              recorded runs (real runs only are reported)
+runs/                              recorded pilot runs (real runs only are reported); runs/_probes/ endpoint probes
+PILOT_SUMMARY.md                   pilot setup, results, observations and limitations
+REPORT.md, results.json            generated by `ctxlab report` from runs/
 REFERENCES.md                      inspected references, commits, licenses, what was adopted or excluded
 ```

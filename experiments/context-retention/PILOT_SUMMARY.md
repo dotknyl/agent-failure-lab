@@ -1,7 +1,9 @@
 # Pilot summary: context retention under automatic compaction
 
-Pilot run on 2026-11-13. Raw recordings are in `runs/`, the table in `REPORT.md`, and the reviews with quoted
-evidence in each run's `review.json`. This is a small pilot, not a benchmark.
+Pilot run on 2026-11-13. Raw recordings are in [`runs/`](runs/), the generated table in [`REPORT.md`](REPORT.md)
+(and [`results.json`](results.json)), and the reviews with quoted evidence in each run's `review.json`. Method
+and reproduction: [`README.md`](README.md). This is a small pilot, not a benchmark. It is experimental research
+and has not been published or approved as an AgentProbe Lab or article.
 
 ## Setup
 
@@ -9,9 +11,9 @@ evidence in each run's `review.json`. This is a small pilot, not a benchmark.
 |---|---|
 | Task | Read-only API incident investigation (`fixtures/checkout-latency-v1`, synthetic, ~567K chars) |
 | Model / API | `gpt-6-luna`, OpenAI Responses API, `store=false`, `reasoning_effort=medium`; encrypted reasoning carried within a run, never between runs |
-| Compaction | Application-managed model summary (frozen prompt v1); fires when estimated input reaches 25,000 tokens (`compaction_threshold_tokens` 37,000 including a 12,000 output reserve); keeps the latest complete tool group verbatim. A **stress setting**: the model's documented max input is 922,000 |
-| Runs | 1 focused sanity run (no tools, curated excerpts) + 3 natural investigations, identical configuration |
-| Cost | $0.058 total upper bound, including 3 endpoint probes and all summary calls (budget $3) |
+| Compaction | Application-managed model summary (frozen prompt v1); fires when estimated input reaches 25,000 tokens (`compaction_threshold_tokens` 37,000 including a 12,000 output reserve); keeps recent complete tool groups verbatim within an 8,500-token estimate (`keep_recent_groups` 2; in all 5 compactions only the latest group fit). A **stress setting**: the model's documented max input is 922,000 |
+| Runs | 1 focused sanity run (no tools, curated excerpts; run before calibration at 3.0 chars/token) + 3 natural investigations with one identical configuration (same `config_sha256`, 2.12 chars/token) |
+| Cost | $0.058 total upper bound, including 3 endpoint probes and all summary calls (budget $3). The first probe (`gpt-5.6-luna` on Chat Completions) was rejected with HTTP 400 and led to the Responses integration; its upper-bound cost is included |
 
 ## Results
 
@@ -27,6 +29,8 @@ reversible, approved rollback of only the payment-client profile v18 -> v17, wit
 preserved), but words it as conditional or non-committal ("make no change now", "evaluate", "if the problem
 recurs"), while the ticket asks for a mitigation before recurrence. The focused run recommended it outright. That
 difference is **not** attributed to context: the focused condition differs in tools, evidence selection and length.
+The failure mode `other` in `REPORT.md` for the natural runs records this mitigation phrasing; the reviews
+classify it as not an evidence or context failure.
 
 ## Observations (n = 3, one model, one incident)
 
@@ -69,4 +73,6 @@ difference is **not** attributed to context: the focused condition differs in to
   - Provider-side handling of requests is not observable.
   - Costs use the configured prices, so they are upper bounds: input is charged at the cache-write rate, and
     the probe and focused-run costs used an earlier, higher price setting.
-  - Model outputs are stochastic; replay reproduces the harness, not the model.
+  - Model outputs are stochastic; replay reproduces the harness, not the model. `ctxlab replay` feeds the
+    recorded responses back offline and requires byte-identical requests; a new `ctxlab live run` is a new
+    inference and is not expected to reproduce these answers.
