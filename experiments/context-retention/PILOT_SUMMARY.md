@@ -2,7 +2,8 @@
 
 Pilot run on 2026-11-13. Raw recordings are in [`runs/`](runs/), the generated table in [`REPORT.md`](REPORT.md)
 (and [`results.json`](results.json)), and the reviews with quoted evidence in each run's `review.json`. Method
-and reproduction: [`README.md`](README.md). This is a small pilot, not a benchmark. It is experimental research
+and reproduction: [`README.md`](README.md). An offline audit of the recordings, from each compaction boundary to
+the final decision, is in [`PILOT_AUDIT.md`](PILOT_AUDIT.md). This is a small pilot, not a benchmark. It is experimental research
 and has not been published or approved as an AgentProbe Lab or article.
 
 ## Setup
@@ -40,6 +41,10 @@ classify it as not an evidence or context failure.
 2. **No evidence was observed to be lost at a decision point.** The audit flagged 10 critical facts as
    "literally lost" across the 5 compactions. Manual reading of every summary found all 10 present in paraphrase,
    with references. The probe misses came from rewording and, in one case, an en dash in a time range.
+   This concerns diagnostic evidence. The [offline audit](PILOT_AUDIT.md) found that all five summaries omitted
+   one requester qualifier from the ticket ("a mitigation before this happens again"). The pinned task still
+   required a reversible mitigation recommendation in every request, and the effect of the omission on the
+   final decisions is not established.
 3. **Re-reading after compaction varied (9, 0, 9)** even though the summaries already carried the facts. Run 2
    answered immediately after compacting, citing lines carried in its summary. Runs 1 and 3 re-read artifacts,
    plausibly to obtain exact lines for citation. Whether the prompt's re-read sentence drives this was **not
