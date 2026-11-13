@@ -167,7 +167,8 @@ What developers can take from this:
 - Whether ticket L20 is unambiguous. Two readings are defensible.
 - Anything about other models, tasks or thresholds, failure rates, or context rot.
 
-**Practical diagnostic guidance supported by these recordings:**
+**Practical diagnostic guidance supported by these recordings** (turned into a step-by-step procedure with worked
+examples in [`DIAGNOSTIC_GUIDE.md`](DIAGNOSTIC_GUIDE.md)):
 
 1. **Diagnose at the decision.** Open the exact request that produced the answer (`model_request` payload). For
    each defect, sort the relevant evidence into never gathered, dropped by compaction, present but unused, or

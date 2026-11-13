@@ -14,6 +14,7 @@ an AgentProbe Lab or article. The source is public for inspection and review.
 For the context-retention pilot:
 
 - Results and limitations: [`PILOT_SUMMARY.md`](experiments/context-retention/PILOT_SUMMARY.md)
+- Diagnosing your own agent: [`DIAGNOSTIC_GUIDE.md`](experiments/context-retention/DIAGNOSTIC_GUIDE.md)
 - Methodology: [`README.md`](experiments/context-retention/README.md)
 - Recordings: [`runs/`](experiments/context-retention/runs/) (see [`runs/README.md`](experiments/context-retention/runs/README.md))
 - Offline replay and tests: [Quick start](experiments/context-retention/README.md#quick-start-offline)
