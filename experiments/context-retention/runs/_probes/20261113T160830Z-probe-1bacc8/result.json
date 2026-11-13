@@ -1,0 +1,16 @@
+{
+  "error": {
+    "kind": "http_status",
+    "message": "Error code: 400 - Function tools with reasoning_effort are not supported for gpt-5.6-luna in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'.",
+    "status": 400,
+    "retryable": false
+  },
+  "totals": {
+    "attempts": 1,
+    "failed_attempts": 1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "cost_reported_usd": 0.0,
+    "cost_upper_bound_usd": 0.00195
+  }
+}

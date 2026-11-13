@@ -1,0 +1,74 @@
+{
+  "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+  "reviewed_at": "2026-11-13",
+  "criteria": {
+    "timeline": {
+      "verdict": "pass",
+      "notes": "Deploy/v18 14:04, reindex from 14:10, p95 472 -> 8,724 ms at 14:18-14:19, alerts 14:21-14:22, 8 s timeouts 14:20-14:22, CPU 26% at 14:41, recovery 15:04-15:09. Minor: config change placed in the 14:10 bullet."
+    },
+    "diagnosis": {
+      "verdict": "pass",
+      "notes": "Gateway degradation amplified by v18, from provider window, payment-client log (8 s timeouts and retries under v18) and config diff, contrasted with v17 log lines (2 s timeouts, at most 2 attempts). Did not examine slow trace spans."
+    },
+    "competing": {
+      "verdict": "pass",
+      "notes": "DB query p95 24-30 ms and pool wait 1-3 ms during high CPU; checkout stayed slow after CPU normalised. No DB span evidence (run never read slow traces)."
+    },
+    "mitigation": {
+      "verdict": "partial",
+      "notes": "Owner decision 2026-11-13: partial. Correct option (payment-client profile-only rollback v18 -> v17, reversible, incident-commander approval, fraud screening and idempotency preserved), but the recommendation is conditional/non-committal while the ticket asks for a mitigation before recurrence. Wording: 'Evaluate a payment-client profile-only rollback'."
+    },
+    "references": {
+      "verdict": "pass",
+      "notes": "25/25 citations valid; several citations were carried from the summary without re-reading and point to the correct lines."
+    }
+  },
+  "verdict_values": [
+    "pass",
+    "partial",
+    "fail"
+  ],
+  "constraint_violation": false,
+  "failure_mode": "other",
+  "failure_mode_values": [
+    "none",
+    "evidence_missing_at_decision",
+    "evidence_present_misused",
+    "tool_or_provider_failure",
+    "resource_limit",
+    "not_testable",
+    "other"
+  ],
+  "failure_mode_notes": "Only shortfall is non-committal mitigation phrasing; not an evidence or context failure. Answered immediately after its single compaction with no re-reads; facts flagged NOT FOUND (literal) were present in the summary in paraphrase.",
+  "evidence_inspection": [
+    {
+      "fact": "latency_high_after_db_recovered",
+      "where": "summary 1",
+      "event_seq": 53,
+      "quote": "checkout latency stayed high after CPU returned to normal while the provider impact window continued"
+    },
+    {
+      "fact": "mitigation_option",
+      "where": "summary 1",
+      "event_seq": 53,
+      "quote": "Smallest reversible candidate to evaluate is rolling back only the payment-client runtime profile to v17"
+    },
+    {
+      "fact": "safety_requirements",
+      "where": "summary 1",
+      "event_seq": 53,
+      "quote": "Do not disable fraud screening or change its timeout behavior."
+    },
+    {
+      "fact": "mitigation_option",
+      "where": "final answer",
+      "event_seq": null,
+      "quote": "Evaluate a **payment-client profile-only rollback from v18 to v17**"
+    }
+  ],
+  "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: ['db_spans_small', 'latency_high_after_db_recovered', 'safety_requirements', 'mitigation_option']; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'day_a_bounded']"
+  }
+}

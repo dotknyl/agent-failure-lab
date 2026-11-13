@@ -1,0 +1,130 @@
+{
+  "run_id": "20261113T162558Z-focused-ea1d97",
+  "provenance": "real",
+  "condition": "focused",
+  "stop_reason": "final_answer",
+  "compaction_tested": false,
+  "final_answer_present": true,
+  "indicator_semantics": "signals for the reviewer; review.json verdicts are authoritative",
+  "sections_present": [
+    "Timeline",
+    "Best-supported cause",
+    "Competing explanation",
+    "Recommended mitigation",
+    "Uncertainty"
+  ],
+  "citations": {
+    "total": 26,
+    "valid": 26,
+    "invalid": []
+  },
+  "criteria": {
+    "timeline": {
+      "section_present": true,
+      "indicators": {
+        "release_time": true,
+        "gateway_onset": true,
+        "latency_alert": true,
+        "db_window": true,
+        "recovery": true
+      },
+      "citations": 14,
+      "citations_valid": 14,
+      "support_facts_cited": [
+        "db_maintenance",
+        "deploy_time",
+        "gateway_degraded",
+        "latency_alert",
+        "recovery"
+      ],
+      "support_facts_expected": [
+        "deploy_time",
+        "gateway_degraded",
+        "db_maintenance",
+        "recovery",
+        "latency_alert"
+      ]
+    },
+    "diagnosis": {
+      "section_present": true,
+      "indicators": {
+        "timeout_value": true,
+        "attempts_value": false,
+        "upstream": true,
+        "amplification": true,
+        "contrast": false
+      },
+      "citations": 3,
+      "citations_valid": 3,
+      "support_facts_cited": [
+        "attempt_waits_timeout",
+        "gateway_degraded"
+      ],
+      "support_facts_expected": [
+        "config_change",
+        "attempt_waits_timeout",
+        "gateway_degraded",
+        "day_a_bounded",
+        "release_alone_ok"
+      ]
+    },
+    "competing": {
+      "section_present": true,
+      "indicators": {
+        "names_db": true,
+        "span_evidence": true,
+        "timing_evidence": true
+      },
+      "citations": 5,
+      "citations_valid": 5,
+      "support_facts_cited": [
+        "db_maintenance",
+        "db_spans_small",
+        "latency_high_after_db_recovered"
+      ],
+      "support_facts_expected": [
+        "db_spans_small",
+        "latency_high_after_db_recovered",
+        "db_maintenance"
+      ]
+    },
+    "mitigation": {
+      "section_present": true,
+      "indicators": {
+        "profile_rollback": true,
+        "bounded_values": false,
+        "reversible": true
+      },
+      "citations": 4,
+      "citations_valid": 4,
+      "support_facts_cited": [
+        "config_change",
+        "mitigation_option",
+        "safety_requirements"
+      ],
+      "support_facts_expected": [
+        "mitigation_option",
+        "safety_requirements",
+        "config_change"
+      ]
+    },
+    "references": {
+      "section_present": true,
+      "indicators": {},
+      "citations": 26,
+      "citations_valid": 26,
+      "support_facts_cited": [],
+      "support_facts_expected": []
+    }
+  },
+  "constraint_flags": [
+    {
+      "flag": "circuit_breaker",
+      "line": "With incident-commander approval, **revert only the checkout-api payment-client runtime profile from v18 to v17** using the documented config rollback. The runbook says this change propagates within about 60 seconds and is reversible by rolling forward. [runbook-payments:L14] This is narrower than r"
+    }
+  ],
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: none; present in request but not literally in answer: ['gateway_degraded', 'attempt_waits_timeout', 'db_spans_small', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+  }
+}

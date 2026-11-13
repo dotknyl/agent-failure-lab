@@ -1,0 +1,25 @@
+{
+  "stop_reason": "final_answer",
+  "stop_detail": "",
+  "stop_meaning": "The model replied without tool calls.",
+  "final_answer_present": true,
+  "totals": {
+    "agent_requests": 7,
+    "summary_requests": 2,
+    "attempts": 9,
+    "failed_attempts": 0,
+    "tool_calls": 29,
+    "tool_errors": 0,
+    "compactions": 2,
+    "prompt_tokens": 101899,
+    "completion_tokens": 7249,
+    "cached_tokens": 32859,
+    "reasoning_tokens": 2320,
+    "summary_prompt_tokens": 25156,
+    "summary_completion_tokens": 3850,
+    "unreported_tokens_upper_bound": 0,
+    "cost_reported_usd": 0.016361875,
+    "cost_upper_bound_usd": 0.016361875
+  },
+  "redactions": 0
+}

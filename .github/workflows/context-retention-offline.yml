@@ -1,0 +1,27 @@
+name: context-retention (offline)
+
+# Offline only: fixture verification, tests and a lockfile check. No job has a model API key, and the tests block
+# network connections, so CI can never make a paid request.
+on:
+  push:
+    paths: ["experiments/context-retention/**", ".github/workflows/context-retention-offline.yml"]
+  pull_request:
+    paths: ["experiments/context-retention/**", ".github/workflows/context-retention-offline.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experiments/context-retention
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.8"
+      - run: uv sync --locked
+      - run: uv run ctxlab fixture verify
+      - run: uv run pytest

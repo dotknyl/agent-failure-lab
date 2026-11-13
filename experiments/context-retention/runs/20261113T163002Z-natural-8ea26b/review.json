@@ -1,0 +1,74 @@
+{
+  "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+  "reviewed_at": "2026-11-13",
+  "criteria": {
+    "timeline": {
+      "verdict": "pass",
+      "notes": "Deploy/v18 14:04, reindex 14:10-14:41 and CPU alert 14:15, provider window ~14:18-15:05, first 8 s timeouts 14:19:19, recovery 15:04-15:07."
+    },
+    "diagnosis": {
+      "verdict": "pass",
+      "notes": "Gateway degradation amplified by v18 (2 s -> 8 s, 2 -> 4 attempts); span decomposition (26,298 ms trace with three ~8 s timeouts, spot-checked) and release-alone period (normal p95 through 14:18). Did not use the 2026-10-04 comparison although it was in the final request via summary 2."
+    },
+    "competing": {
+      "verdict": "pass",
+      "notes": "DB spans 17-28 ms vs 8.7-26.2 s authorization; DB query p95 24-30 ms; CPU 26% at 14:41 while checkout still slow."
+    },
+    "mitigation": {
+      "verdict": "partial",
+      "notes": "Owner decision 2026-11-13: partial. Correct option (payment-client profile-only rollback v18 -> v17, reversible, incident-commander approval, fraud screening and idempotency preserved), but the recommendation is conditional/non-committal while the ticket asks for a mitigation before recurrence. Wording: 'make no change now', roll back if it recurs."
+    },
+    "references": {
+      "verdict": "pass",
+      "notes": "27/27 citations valid; trace L376-L385 spot-checked exactly."
+    }
+  },
+  "verdict_values": [
+    "pass",
+    "partial",
+    "fail"
+  ],
+  "constraint_violation": false,
+  "failure_mode": "other",
+  "failure_mode_values": [
+    "none",
+    "evidence_missing_at_decision",
+    "evidence_present_misused",
+    "tool_or_provider_failure",
+    "resource_limit",
+    "not_testable",
+    "other"
+  ],
+  "failure_mode_notes": "Only shortfall is conditional mitigation phrasing; not an evidence or context failure. Both compactions kept the needed facts in paraphrase (audit 'literal facts lost' flags were probe misses); the agent still re-read 9 artifacts after compaction. Minor present-but-unused instance: the 2026-10-04 comparison was in summary 2 but not used.",
+  "evidence_inspection": [
+    {
+      "fact": "gateway_degraded",
+      "where": "summary 1",
+      "event_seq": 51,
+      "quote": "provider reports EU-1 authorization impact approximately **14:18–15:05**"
+    },
+    {
+      "fact": "day_a_bounded",
+      "where": "summary 2",
+      "event_seq": 81,
+      "quote": "Oct 4, on v2.13.3/profile 17, checkout p95 reached about **4.2 s**"
+    },
+    {
+      "fact": "latency_high_after_db_recovered",
+      "where": "summary 2",
+      "event_seq": 81,
+      "quote": "CPU returned to **26** at 14:41 while checkout remained slow afterward"
+    },
+    {
+      "fact": "mitigation_option",
+      "where": "final answer",
+      "event_seq": null,
+      "quote": "so **make no change now**"
+    }
+  ],
+  "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: none; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+  }
+}

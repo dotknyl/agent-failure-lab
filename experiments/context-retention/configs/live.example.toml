@@ -1,0 +1,48 @@
+# Live-run configuration. Copy to configs/live.local.toml (git-ignored), fill every REQUIRED value, then:
+#   uv run ctxlab preflight --config configs/live.local.toml
+# Nothing in this file is a recommendation of a model, price or budget. Fill them from your provider's
+# current documentation and your own spending decision. The API key is read from the environment variable
+# named in api_key_env and is never written to disk.
+
+[provider]
+integration = "openai-chat-completions"   # or "openai-responses" (stateless, store=false; tools + reasoning)
+base_url = "https://api.openai.com/v1"     # any endpoint you have verified with `ctxlab live probe`
+api_key_env = "OPENAI_API_KEY"
+model = ""                                  # REQUIRED
+stream = false                              # set true if the endpoint only accepts streamed requests
+max_tokens_param = "max_completion_tokens"  # or "max_tokens" for endpoints that only accept that name
+# temperature = 0.0                         # omitted from requests unless set; some models reject it
+# reasoning_effort = "none"                 # omitted unless set; some models refuse function tools on Chat
+#                                           # Completions unless it is "none" (the probe reports this)
+request_timeout_s = 180.0
+max_retries = 1                             # explicit, recorded retries; SDK retries are always off
+require_usage = true                        # stop if a response has no usage (cost could not be accounted)
+
+[context]
+native_context_tokens = 0          # REQUIRED: the model's documented context window (recorded, disclosed)
+compaction_threshold_tokens = 0    # REQUIRED for natural runs: input trigger + max_output_tokens (README: 18000 + reserve)
+threshold_is_stress_setting = true # true when the threshold is far below the native window (disclosed)
+max_output_tokens = 4000           # also the output reserve in the trigger
+summary_max_output_tokens = 2000
+summary_max_words = 900
+keep_recent_groups = 2             # most recent complete tool-call groups kept verbatim
+retain_budget_tokens = 6000        # ...as long as they fit this estimate (the latest group is always kept)
+chars_per_token = 3.0              # heuristic; compare with provider prompt_tokens after the sanity run
+compaction_enabled = true
+
+[limits]
+max_agent_requests = 40
+max_tool_calls = 80
+max_compactions = 6
+max_total_tokens = 2000000         # provider-reported tokens incl. summaries, plus worst case for failed attempts
+
+[budget]
+pilot_budget_usd = 0.0             # REQUIRED with pricing: total for probe + all runs (ledger over runs/)
+max_cost_usd = 0.0                 # REQUIRED with pricing: cap for any single invocation (<= pilot_budget_usd)
+allow_without_dollar_cap = false   # true only if pricing is unknown and token/request caps are acceptable
+input_usd_per_mtok = 0.0
+# cached_input_usd_per_mtok = 0.0  # if unset, cached input is charged at the full input price (upper bound)
+output_usd_per_mtok = 0.0
+pricing_source = ""                # URL or document you took the prices from
+pricing_date = ""                  # YYYY-MM-DD you read it
+authorized_by = ""                 # REQUIRED: the owner's approval of model and budget, e.g. "owner, 2026-11-14"

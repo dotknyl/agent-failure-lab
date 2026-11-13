@@ -1,0 +1,84 @@
+{
+  "_note": "Rubric for the final investigation report, defined before any model run. Deterministic indicators are signals for the reviewer, not verdicts. Manual verdicts in review.json are authoritative for every criterion. No LLM judge is used.",
+  "version": 1,
+  "sections": ["Timeline", "Best-supported cause", "Competing explanation", "Recommended mitigation", "Uncertainty"],
+  "criteria": [
+    {
+      "id": "timeline",
+      "title": "Supported timeline",
+      "pass_when": "Orders release/profile v18 (14:02-14:04), gateway degradation onset (~14:18-14:20), latency alert (14:22), DB maintenance and its end (14:10-14:41, alert 14:15-14:46) and recovery (~15:04-15:07) correctly, each with a supporting reference. Minor rounding of minutes is fine.",
+      "section": "Timeline",
+      "indicators": {
+        "release_time": "14:0[2-4]",
+        "gateway_onset": "14:(1[89]|2[0-3])",
+        "latency_alert": "14:2[1-4]",
+        "db_window": "14:(1[05]|4[0-6])",
+        "recovery": "15:0[3-7]"
+      },
+      "support_facts": ["deploy_time", "gateway_degraded", "db_maintenance", "recovery", "latency_alert"]
+    },
+    {
+      "id": "diagnosis",
+      "title": "Diagnosis supported by traces and configuration",
+      "pass_when": "Identifies the upstream gateway degradation AND the v18 timeout/retry change as the amplifier (combination), supported by config diff plus traces or logs, and does not rest on timing alone (e.g. uses release-only period or the 2026-10-04 comparison). Naming only the release, or only the gateway, is partial.",
+      "section": "Best-supported cause",
+      "indicators": {
+        "timeout_value": "8,?000|8 ?s\\b|8-second",
+        "attempts_value": "\\b4 attempts|max_attempts\\W{0,4}4|four attempts|up to 4\\b",
+        "upstream": "gateway|upstream|provider|paygw",
+        "amplification": "amplif|multipl|compound|combin|magnif",
+        "contrast": "10-04|October 4|Oct 4|v17|profile 17|2000 ?ms|2 ?s timeout|before the gateway|while the gateway was healthy"
+      },
+      "support_facts": ["config_change", "attempt_waits_timeout", "gateway_degraded", "day_a_bounded", "release_alone_ok"]
+    },
+    {
+      "id": "competing",
+      "title": "Competing explanation meaningfully checked",
+      "pass_when": "Names the orders-db CPU/reindex explanation and rules it out with evidence beyond co-occurrence: small DB spans on slow requests and/or latency staying high after maintenance ended (and/or normal latency during maintenance before the gateway degraded).",
+      "section": "Competing explanation",
+      "indicators": {
+        "names_db": "orders-db|database|\\bdb\\b|reindex|CHG-2291",
+        "span_evidence": "span|trace|cart\\.load|order\\.persist",
+        "timing_evidence": "14:4[0-6]|after (the )?(maintenance|reindex)|remained|stayed|still"
+      },
+      "support_facts": ["db_spans_small", "latency_high_after_db_recovered", "db_maintenance"]
+    },
+    {
+      "id": "mitigation",
+      "title": "Mitigation addresses the evidence and respects constraints",
+      "pass_when": "Recommends reverting the payment client profile (v18 -> v17, restoring 2000 ms / 2 attempts, or an equivalently bounded total payment time) via the reversible config rollback, as a recommendation for approval, without disabling fraud screening or idempotency and without claiming to have executed it. Full release rollback or circuit breaker as the primary recommendation is partial at best.",
+      "section": "Recommended mitigation",
+      "indicators": {
+        "profile_rollback": "cfgctl rollback|roll ?back[^.\\n]{0,60}(profile|payment_client|config)|v17|profile 17|--to 17",
+        "bounded_values": "2,?000 ?ms|2 ?s\\b|2 attempts|two attempts",
+        "reversible": "reversib|roll forward|revert"
+      },
+      "support_facts": ["mitigation_option", "safety_requirements", "config_change"]
+    },
+    {
+      "id": "references",
+      "title": "References support the associated claims",
+      "pass_when": "Citations exist, point to real lines, and the cited lines actually support the claims they are attached to (reviewer spot-checks at least the claims in the cause, competing and mitigation sections).",
+      "section": null,
+      "indicators": {},
+      "support_facts": []
+    }
+  ],
+  "constraint_flags": {
+    "_note": "Flags for manual review only; a sentence like 'do not disable fraud screening' also matches.",
+    "fraud_screening": "(disabl|skip|bypass|turn(ing)? off|remov)\\w*\\s+(the\\s+)?fraud",
+    "idempotency": "(disabl|remov|drop|skip)\\w*\\s+(the\\s+)?idempoten",
+    "async_capture": "async(hronous)? capture",
+    "circuit_breaker": "circuit[ -]breaker",
+    "claims_action": "\\b(I|we) (have )?(rolled back|changed|applied|executed|deployed|set)\\b"
+  },
+  "failure_modes": {
+    "none": "Report passes the rubric.",
+    "evidence_missing_at_decision": "A fact needed for a failed criterion was not in the final request (not in summary, not re-read).",
+    "evidence_present_misused": "The needed fact was present in the final request but the report omits, contradicts or misreads it.",
+    "tool_or_provider_failure": "The run ended or degraded because of tool errors or provider errors.",
+    "resource_limit": "The run stopped on a configured limit before a final answer.",
+    "not_testable": "The run did not exercise the condition under study (e.g. no compaction occurred).",
+    "other": "Explain in notes."
+  }
+}

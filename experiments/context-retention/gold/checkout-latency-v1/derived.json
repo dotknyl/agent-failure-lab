@@ -1,0 +1,164 @@
+{
+  "fixture": "checkout-latency-v1",
+  "deploy_started": "2026-10-06T14:02:10Z",
+  "profile_v18_effective": "2026-10-06T14:04:00Z",
+  "gateway_degraded_2026_10_04": [
+    "2026-10-04T14:02:00Z",
+    "2026-10-04T14:24:00Z"
+  ],
+  "gateway_degraded_2026_10_06": [
+    "2026-10-06T14:19:00Z",
+    "2026-10-06T15:04:00Z"
+  ],
+  "db_maintenance_2026_10_06": [
+    "2026-10-06T14:10:00Z",
+    "2026-10-06T14:41:00Z"
+  ],
+  "first_timeout_log_2026_10_06": "2026-10-06T14:19:19.946Z",
+  "p95_ms": {
+    "2026-10-06 before release": {
+      "min": 386,
+      "max": 509,
+      "median": 484
+    },
+    "2026-10-06 after release, gateway healthy": {
+      "min": 465,
+      "max": 564,
+      "median": 529
+    },
+    "2026-10-06 gateway degraded": {
+      "min": 8545,
+      "max": 33908,
+      "median": 17162
+    },
+    "2026-10-06 gateway degraded, after db maintenance": {
+      "min": 8545,
+      "max": 33882,
+      "median": 17162
+    },
+    "2026-10-06 db maintenance, gateway healthy": {
+      "min": 472,
+      "max": 564,
+      "median": 522
+    },
+    "2026-10-06 after recovery": {
+      "min": 421,
+      "max": 8756,
+      "median": 520
+    },
+    "2026-10-04 gateway degraded (profile v17)": {
+      "min": 2500,
+      "max": 4201,
+      "median": 4183
+    }
+  },
+  "timeout_attempt_ms": {
+    "2026-10-04": [
+      2001,
+      2006
+    ],
+    "2026-10-06": [
+      8001,
+      8006
+    ]
+  },
+  "max_request_ms": {
+    "2026-10-04": 4201,
+    "2026-10-06": 33908
+  },
+  "slow_requests_2026_10_06": {
+    "count": 195,
+    "max_db_ms": 54,
+    "min_payment_authorize_share": 0.982
+  },
+  "isolated_timeouts_outside_degradation": [
+    {
+      "day": "2026-10-04",
+      "request_start": "2026-10-04T14:47:26.085Z",
+      "request_ms": 2573,
+      "sampled": false
+    },
+    {
+      "day": "2026-10-06",
+      "request_start": "2026-10-06T15:22:26.626Z",
+      "request_ms": 8756,
+      "sampled": false
+    },
+    {
+      "day": "2026-10-06",
+      "request_start": "2026-10-06T15:34:56.057Z",
+      "request_ms": 8732,
+      "sampled": false
+    }
+  ],
+  "tradeoff_note": "Profile v18 reduces exhausted authorizations (HTTP 502) during gateway blips but multiplies latency; reverting to v17 restores bounded latency at the cost of more fast payment failures during a blip.",
+  "http_502_count": {
+    "2026-10-04": 37,
+    "2026-10-06": 8
+  },
+  "requests": {
+    "2026-10-04": 1080,
+    "2026-10-06": 1620
+  },
+  "alerts": {
+    "2026-10-04": [
+      {
+        "t": "2026-10-04T14:04:00Z",
+        "state": "FIRING",
+        "name": "payment-client-error-ratio"
+      },
+      {
+        "t": "2026-10-04T14:11:00Z",
+        "state": "FIRING",
+        "name": "checkout-latency-p95"
+      },
+      {
+        "t": "2026-10-04T14:26:00Z",
+        "state": "RESOLVED",
+        "name": "checkout-latency-p95"
+      },
+      {
+        "t": "2026-10-04T14:26:00Z",
+        "state": "RESOLVED",
+        "name": "payment-client-error-ratio"
+      }
+    ],
+    "2026-10-06": [
+      {
+        "t": "2026-10-06T14:15:00Z",
+        "state": "FIRING",
+        "name": "orders-db-cpu"
+      },
+      {
+        "t": "2026-10-06T14:21:00Z",
+        "state": "FIRING",
+        "name": "payment-client-error-ratio"
+      },
+      {
+        "t": "2026-10-06T14:22:00Z",
+        "state": "FIRING",
+        "name": "checkout-latency-p95"
+      },
+      {
+        "t": "2026-10-06T14:46:00Z",
+        "state": "RESOLVED",
+        "name": "orders-db-cpu"
+      },
+      {
+        "t": "2026-10-06T15:06:00Z",
+        "state": "RESOLVED",
+        "name": "payment-client-error-ratio"
+      },
+      {
+        "t": "2026-10-06T15:07:00Z",
+        "state": "RESOLVED",
+        "name": "checkout-latency-p95"
+      }
+    ]
+  },
+  "first_latency_alert_2026_10_06": "2026-10-06T14:22:00Z",
+  "latency_alert_resolved_2026_10_06": "2026-10-06T15:07:00Z",
+  "db_cpu_alert_2026_10_06": "2026-10-06T14:15:00Z",
+  "db_cpu_resolved_2026_10_06": "2026-10-06T14:46:00Z",
+  "first_latency_alert_2026_10_04": "2026-10-04T14:11:00Z"
+}

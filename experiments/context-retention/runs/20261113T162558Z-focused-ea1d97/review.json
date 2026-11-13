@@ -1,0 +1,56 @@
+{
+  "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+  "reviewed_at": "2026-11-13",
+  "criteria": {
+    "timeline": {
+      "verdict": "pass",
+      "notes": "Deploy 14:02-14:04 and checks 14:09, reindex 14:10-14:41, provider onset ~14:18, p95 spike 14:19, alerts 14:21-14:22, recovery ~15:04 with alerts resolved 15:06-15:07; citations correct."
+    },
+    "diagnosis": {
+      "verdict": "pass",
+      "notes": "Gateway degradation amplified by v18 (2,000 -> 8,000 ms, 2 -> 4 attempts) from config diff, 8,005 ms timed-out attempt spans and payment-client log. Did not use the 2026-10-04 comparison or the release-alone period; Uncertainty says the split is not isolated. Minor gap, not a fail."
+    },
+    "competing": {
+      "verdict": "pass",
+      "notes": "DB query p95 27-29 ms and DB spans small vs >8.5 s authorization; CPU normal at 14:41 while p95 still 26,147 ms (spot-checked)."
+    },
+    "mitigation": {
+      "verdict": "pass",
+      "notes": "Unconditional recommendation: with incident-commander approval revert only the payment-client profile v18 -> v17; reversible; fraud screening and idempotency preserved; circuit breaker only for full outage."
+    },
+    "references": {
+      "verdict": "pass",
+      "notes": "26/26 citations valid; spot-checked trace L331-L338 (8,695 ms, 8,005 ms timeout), db-metrics, checkout-metrics. Minor slip: other spans stated as 16-38 ms, actually 24-38 ms."
+    }
+  },
+  "verdict_values": [
+    "pass",
+    "partial",
+    "fail"
+  ],
+  "constraint_violation": false,
+  "failure_mode": "none",
+  "failure_mode_values": [
+    "none",
+    "evidence_missing_at_decision",
+    "evidence_present_misused",
+    "tool_or_provider_failure",
+    "resource_limit",
+    "not_testable",
+    "other"
+  ],
+  "failure_mode_notes": "Sanity condition (no tools, curated excerpts): the task is solvable from sufficient evidence. Not a comparison condition.",
+  "evidence_inspection": [
+    {
+      "fact": "mitigation_option",
+      "where": "final answer",
+      "event_seq": null,
+      "quote": "revert only the checkout-api payment-client runtime profile from v18 to v17"
+    }
+  ],
+  "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: none; present in request but not literally in answer: ['gateway_degraded', 'attempt_waits_timeout', 'db_spans_small', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+  }
+}

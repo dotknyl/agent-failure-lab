@@ -1,0 +1,125 @@
+{
+  "run_id": "20261113T163002Z-natural-8ea26b",
+  "provenance": "real",
+  "condition": "natural",
+  "stop_reason": "final_answer",
+  "compaction_tested": true,
+  "final_answer_present": true,
+  "indicator_semantics": "signals for the reviewer; review.json verdicts are authoritative",
+  "sections_present": [
+    "Timeline",
+    "Best-supported cause",
+    "Competing explanation",
+    "Recommended mitigation",
+    "Uncertainty"
+  ],
+  "citations": {
+    "total": 27,
+    "valid": 27,
+    "invalid": []
+  },
+  "criteria": {
+    "timeline": {
+      "section_present": true,
+      "indicators": {
+        "release_time": true,
+        "gateway_onset": true,
+        "latency_alert": true,
+        "db_window": true,
+        "recovery": true
+      },
+      "citations": 14,
+      "citations_valid": 14,
+      "support_facts_cited": [
+        "db_maintenance",
+        "deploy_time",
+        "gateway_degraded",
+        "recovery"
+      ],
+      "support_facts_expected": [
+        "deploy_time",
+        "gateway_degraded",
+        "db_maintenance",
+        "recovery",
+        "latency_alert"
+      ]
+    },
+    "diagnosis": {
+      "section_present": true,
+      "indicators": {
+        "timeout_value": false,
+        "attempts_value": false,
+        "upstream": true,
+        "amplification": true,
+        "contrast": false
+      },
+      "citations": 4,
+      "citations_valid": 4,
+      "support_facts_cited": [
+        "attempt_waits_timeout",
+        "config_change",
+        "gateway_degraded",
+        "release_alone_ok"
+      ],
+      "support_facts_expected": [
+        "config_change",
+        "attempt_waits_timeout",
+        "gateway_degraded",
+        "day_a_bounded",
+        "release_alone_ok"
+      ]
+    },
+    "competing": {
+      "section_present": true,
+      "indicators": {
+        "names_db": true,
+        "span_evidence": true,
+        "timing_evidence": true
+      },
+      "citations": 6,
+      "citations_valid": 6,
+      "support_facts_cited": [
+        "db_maintenance",
+        "db_spans_small",
+        "latency_high_after_db_recovered"
+      ],
+      "support_facts_expected": [
+        "db_spans_small",
+        "latency_high_after_db_recovered",
+        "db_maintenance"
+      ]
+    },
+    "mitigation": {
+      "section_present": true,
+      "indicators": {
+        "profile_rollback": true,
+        "bounded_values": false,
+        "reversible": true
+      },
+      "citations": 3,
+      "citations_valid": 3,
+      "support_facts_cited": [
+        "mitigation_option",
+        "safety_requirements"
+      ],
+      "support_facts_expected": [
+        "mitigation_option",
+        "safety_requirements",
+        "config_change"
+      ]
+    },
+    "references": {
+      "section_present": true,
+      "indicators": {},
+      "citations": 27,
+      "citations_valid": 27,
+      "support_facts_cited": [],
+      "support_facts_expected": []
+    }
+  },
+  "constraint_flags": [],
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: none; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+  }
+}

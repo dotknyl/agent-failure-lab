@@ -1,0 +1,18 @@
+{
+  "tool_call_returned": true,
+  "usage_on_tool_call_response": true,
+  "tool_result_accepted": true,
+  "final_text_returned": true,
+  "usage_on_final_response": true,
+  "answer": "12",
+  "encrypted_reasoning_returned": true,
+  "reasoning_carry_accepted": true,
+  "totals": {
+    "attempts": 3,
+    "failed_attempts": 0,
+    "prompt_tokens": 1492,
+    "completion_tokens": 41,
+    "cost_reported_usd": 0.00042425000000000004,
+    "cost_upper_bound_usd": 0.00042425000000000004
+  }
+}

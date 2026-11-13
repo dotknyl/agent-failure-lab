@@ -1,0 +1,50 @@
+--- a/deploy/checkout-api/config.yaml	(v2.13.3)
++++ b/deploy/checkout-api/config.yaml	(v2.14.0)
+@@ -1,46 +1,48 @@
+ service: checkout-api
+ region: eu-1
+ http:
+   port: 8080
+   request_body_limit_kb: 256
+   server_timeout_ms: 60000
+ log:
+   level: info
+   format: json
+ cart:
+-  cache_ttl_s: 30
++  cache_ttl_s: 60
+ address_validation:
+-  enabled: false
++  enabled: true
+   endpoint: http://address-svc.internal:8080
+   timeout_ms: 300
+ fraud_screen:
+   enabled: true
+   endpoint: http://fraud-svc.internal:8080
+   timeout_ms: 400
+   on_timeout: hold_for_review
+ orders_db:
+   pool_size: 40
+   acquire_timeout_ms: 1000
+   statement_timeout_ms: 2000
+ payment_client:
+-  profile_version: 17
++  profile_version: 18
+   gateway: paygw-eu-1
+   connect_timeout_ms: 500
+-  request_timeout_ms: 2000
++  request_timeout_ms: 8000
+   retry:
+-    max_attempts: 2
+-    backoff: fixed
+-    backoff_base_ms: 100
++    max_attempts: 4
++    backoff: exponential
++    backoff_base_ms: 250
+     retry_on: [timeout, http_502, http_503]
+   idempotency:
+     header: Idempotency-Key
+     reuse_across_attempts: true
+ features:
+   new_receipt_email: true
+   saved_cards: true

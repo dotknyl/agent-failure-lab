@@ -1,0 +1,611 @@
+{
+  "run_id": "20261113T163542Z-natural-284440",
+  "provenance": "real",
+  "condition": "natural",
+  "stop_reason": "final_answer",
+  "totals": {
+    "agent_requests": 5,
+    "summary_requests": 1,
+    "attempts": 6,
+    "failed_attempts": 0,
+    "tool_calls": 20,
+    "tool_errors": 0,
+    "compactions": 1,
+    "prompt_tokens": 61686,
+    "completion_tokens": 4456,
+    "cached_tokens": 6508,
+    "reasoning_tokens": 1577,
+    "summary_prompt_tokens": 20028,
+    "summary_completion_tokens": 2477,
+    "unreported_tokens_upper_bound": 0,
+    "cost_reported_usd": 0.009938750000000001,
+    "cost_upper_bound_usd": 0.009938750000000001
+  },
+  "compaction_tested": true,
+  "requests": [
+    {
+      "purpose": "agent",
+      "attempt": 1,
+      "agent_request": 1,
+      "estimate_input_tokens": 1254,
+      "messages": 2,
+      "opaque_reasoning_items": 0,
+      "opaque_reasoning_chars": 0,
+      "fact_locations": {
+        "config_change": [],
+        "deploy_time": [],
+        "release_alone_ok": [],
+        "gateway_degraded": [],
+        "attempt_waits_timeout": [],
+        "db_maintenance": [],
+        "db_spans_small": [],
+        "latency_high_after_db_recovered": [],
+        "day_a_bounded": [],
+        "safety_requirements": [],
+        "mitigation_option": []
+      },
+      "prompt_tokens": 496,
+      "completion_tokens": 15,
+      "finish_reason": "tool_calls",
+      "tool_calls": 1,
+      "estimate_ratio": 2.528
+    },
+    {
+      "purpose": "agent",
+      "attempt": 1,
+      "agent_request": 2,
+      "estimate_input_tokens": 2407,
+      "messages": 4,
+      "opaque_reasoning_items": 0,
+      "opaque_reasoning_chars": 0,
+      "fact_locations": {
+        "config_change": [],
+        "deploy_time": [],
+        "release_alone_ok": [],
+        "gateway_degraded": [],
+        "attempt_waits_timeout": [],
+        "db_maintenance": [],
+        "db_spans_small": [],
+        "latency_high_after_db_recovered": [],
+        "day_a_bounded": [],
+        "safety_requirements": [],
+        "mitigation_option": []
+      },
+      "prompt_tokens": 1108,
+      "completion_tokens": 158,
+      "finish_reason": "tool_calls",
+      "tool_calls": 7,
+      "estimate_ratio": 2.172
+    },
+    {
+      "purpose": "agent",
+      "attempt": 1,
+      "agent_request": 3,
+      "estimate_input_tokens": 7389,
+      "messages": 12,
+      "opaque_reasoning_items": 1,
+      "opaque_reasoning_chars": 2053,
+      "fact_locations": {
+        "config_change": [
+          "body"
+        ],
+        "deploy_time": [
+          "body"
+        ],
+        "release_alone_ok": [
+          "body"
+        ],
+        "gateway_degraded": [
+          "body"
+        ],
+        "attempt_waits_timeout": [],
+        "db_maintenance": [
+          "body"
+        ],
+        "db_spans_small": [],
+        "latency_high_after_db_recovered": [],
+        "day_a_bounded": [
+          "body"
+        ],
+        "safety_requirements": [
+          "body"
+        ],
+        "mitigation_option": [
+          "body"
+        ]
+      },
+      "prompt_tokens": 4301,
+      "completion_tokens": 255,
+      "finish_reason": "tool_calls",
+      "tool_calls": 7,
+      "estimate_ratio": 1.718
+    },
+    {
+      "purpose": "agent",
+      "attempt": 1,
+      "agent_request": 4,
+      "estimate_input_tokens": 23591,
+      "messages": 20,
+      "opaque_reasoning_items": 2,
+      "opaque_reasoning_chars": 4554,
+      "fact_locations": {
+        "config_change": [
+          "body"
+        ],
+        "deploy_time": [
+          "body"
+        ],
+        "release_alone_ok": [
+          "body"
+        ],
+        "gateway_degraded": [
+          "body"
+        ],
+        "attempt_waits_timeout": [
+          "body"
+        ],
+        "db_maintenance": [
+          "body"
+        ],
+        "db_spans_small": [],
+        "latency_high_after_db_recovered": [
+          "body"
+        ],
+        "day_a_bounded": [
+          "body"
+        ],
+        "safety_requirements": [
+          "body"
+        ],
+        "mitigation_option": [
+          "body"
+        ]
+      },
+      "prompt_tokens": 19942,
+      "completion_tokens": 195,
+      "finish_reason": "tool_calls",
+      "tool_calls": 5,
+      "estimate_ratio": 1.183
+    },
+    {
+      "purpose": "summary",
+      "attempt": 1,
+      "agent_request": 4,
+      "estimate_input_tokens": 23049,
+      "messages": 2,
+      "opaque_reasoning_items": 0,
+      "opaque_reasoning_chars": 0,
+      "prompt_tokens": 20028,
+      "completion_tokens": 2477,
+      "finish_reason": "stop",
+      "tool_calls": 0,
+      "estimate_ratio": 1.151
+    },
+    {
+      "purpose": "agent",
+      "attempt": 1,
+      "agent_request": 5,
+      "estimate_input_tokens": 22309,
+      "messages": 9,
+      "opaque_reasoning_items": 1,
+      "opaque_reasoning_chars": 2609,
+      "fact_locations": {
+        "config_change": [
+          "summary",
+          "body"
+        ],
+        "deploy_time": [
+          "summary"
+        ],
+        "release_alone_ok": [
+          "summary"
+        ],
+        "gateway_degraded": [
+          "body"
+        ],
+        "attempt_waits_timeout": [
+          "body"
+        ],
+        "db_maintenance": [
+          "summary"
+        ],
+        "db_spans_small": [],
+        "latency_high_after_db_recovered": [],
+        "day_a_bounded": [
+          "body"
+        ],
+        "safety_requirements": [],
+        "mitigation_option": []
+      },
+      "prompt_tokens": 15811,
+      "completion_tokens": 1356,
+      "finish_reason": "stop",
+      "tool_calls": 0,
+      "estimate_ratio": 1.411
+    }
+  ],
+  "compactions": [
+    {
+      "n": 1,
+      "estimate_before": 41972,
+      "threshold": 37000,
+      "summarized_messages": 18,
+      "retained_groups": 1,
+      "estimate_after": 22309,
+      "summary_chars": 5540,
+      "summary_truncated": false,
+      "facts": {
+        "config_change": {
+          "before": true,
+          "in_summary": true,
+          "after": true
+        },
+        "deploy_time": {
+          "before": true,
+          "in_summary": true,
+          "after": true
+        },
+        "release_alone_ok": {
+          "before": true,
+          "in_summary": true,
+          "after": true
+        },
+        "gateway_degraded": {
+          "before": true,
+          "in_summary": false,
+          "after": true
+        },
+        "attempt_waits_timeout": {
+          "before": true,
+          "in_summary": false,
+          "after": true
+        },
+        "db_maintenance": {
+          "before": true,
+          "in_summary": true,
+          "after": true
+        },
+        "db_spans_small": {
+          "before": false,
+          "in_summary": false,
+          "after": false
+        },
+        "latency_high_after_db_recovered": {
+          "before": true,
+          "in_summary": false,
+          "after": false
+        },
+        "day_a_bounded": {
+          "before": true,
+          "in_summary": false,
+          "after": true
+        },
+        "safety_requirements": {
+          "before": true,
+          "in_summary": false,
+          "after": false
+        },
+        "mitigation_option": {
+          "before": true,
+          "in_summary": false,
+          "after": false
+        }
+      },
+      "literal_facts_lost": [
+        "latency_high_after_db_recovered",
+        "safety_requirements",
+        "mitigation_option"
+      ]
+    }
+  ],
+  "tool_calls": [
+    {
+      "call_id": "call_YoUIpru3pGiRXNEib6f2LsEO",
+      "name": "list_artifacts",
+      "arguments": "{}",
+      "agent_request": 1,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_Or4E4j0dFhOm8MX5Zzv8LY5j",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"ticket\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "ticket",
+        1,
+        30,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_vAsQdzfj6UxzhhAVPpT5AltV",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"release-notes\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "release-notes",
+        1,
+        24,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_h51LtGNvhrZomoxUZHYCRaRk",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"config-diff\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "config-diff",
+        1,
+        50,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_vqeqYiT0FV4gulxUfU2U5eeM",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"alerts-log\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "alerts-log",
+        1,
+        10,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_YfcJhN8BxMwmxeEOfJGvLwo5",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"runbook-payments\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "runbook-payments",
+        1,
+        22,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_VgQzhwMfiX5KsgM8wpKdo4FW",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"db-change-log\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "db-change-log",
+        1,
+        8,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_DAtA7JFMv5dCpNmiSYx6tmCZ",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"provider-status\"}",
+      "agent_request": 2,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "provider-status",
+        1,
+        22,
+        "end_of_artifact"
+      ]
+    },
+    {
+      "call_id": "call_10BTVVp7xrLHt19gLkus0OAc",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"checkout-metrics\",\"offset\":1,\"limit\":15}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "checkout-metrics",
+        1,
+        15,
+        "limit"
+      ]
+    },
+    {
+      "call_id": "call_1bODI2GEmc6zPDSbTI9aK0BK",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"checkout-metrics\",\"offset\":115,\"limit\":110}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "checkout-metrics",
+        115,
+        224,
+        "limit"
+      ]
+    },
+    {
+      "call_id": "call_63sqRGRQLPuKRN3WHzKWQzfY",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"db-metrics\",\"offset\":1,\"limit\":15}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "db-metrics",
+        1,
+        15,
+        "limit"
+      ]
+    },
+    {
+      "call_id": "call_UOaevCnMzC6djnAxaSetmgYw",
+      "name": "read_artifact",
+      "arguments": "{\"id\":\"db-metrics\",\"offset\":115,\"limit\":110}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new",
+      "read": [
+        "db-metrics",
+        115,
+        224,
+        "limit"
+      ]
+    },
+    {
+      "call_id": "call_mmredzRVWV1MsP6t3KAITIIr",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"14:2 in:payment-client-log\"}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_22zi3pZ8dfw5BfUFoJOe9nr4",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"authorization in:traces-2026-10-06\"}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_gvcGV12yKVZapNN99WtCTxEQ",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"address in:traces-2026-10-06\"}",
+      "agent_request": 3,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_EF9VDdSeAfy4VgFbvY0dmYlb",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"payment in:traces-2026-10-06\"}",
+      "agent_request": 4,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_is97U2Lp6q47Nm952QkU745G",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"payment in:traces-2026-10-04\"}",
+      "agent_request": 4,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_VAkOZPPfYIQb6I2E317Sxdcm",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"profile_version in:payment-client-log\"}",
+      "agent_request": 4,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_WqZBc3LnwwvRI0wOZLhwHfTZ",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"exhausted in:payment-client-log\"}",
+      "agent_request": 4,
+      "ok": true,
+      "classification": "new"
+    },
+    {
+      "call_id": "call_fwz4WGFYuckYr3iEKMJHP3Rg",
+      "name": "search_artifacts",
+      "arguments": "{\"query\":\"14:2 in:payment-client-log\"}",
+      "agent_request": 4,
+      "ok": true,
+      "classification": "reread_while_present"
+    }
+  ],
+  "tool_call_classification": {
+    "new": 19,
+    "reread_while_present": 1
+  },
+  "final_decision": {
+    "agent_request": 5,
+    "facts": {
+      "config_change": {
+        "in_request": [
+          "summary",
+          "body"
+        ],
+        "in_answer": false
+      },
+      "deploy_time": {
+        "in_request": [
+          "summary"
+        ],
+        "in_answer": true
+      },
+      "release_alone_ok": {
+        "in_request": [
+          "summary"
+        ],
+        "in_answer": true
+      },
+      "gateway_degraded": {
+        "in_request": [
+          "body"
+        ],
+        "in_answer": false
+      },
+      "attempt_waits_timeout": {
+        "in_request": [
+          "body"
+        ],
+        "in_answer": false
+      },
+      "db_maintenance": {
+        "in_request": [
+          "summary"
+        ],
+        "in_answer": true
+      },
+      "db_spans_small": {
+        "in_request": [],
+        "in_answer": false
+      },
+      "latency_high_after_db_recovered": {
+        "in_request": [],
+        "in_answer": false
+      },
+      "day_a_bounded": {
+        "in_request": [
+          "body"
+        ],
+        "in_answer": false
+      },
+      "safety_requirements": {
+        "in_request": [],
+        "in_answer": false
+      },
+      "mitigation_option": {
+        "in_request": [],
+        "in_answer": false
+      }
+    }
+  },
+  "fact_descriptions": {
+    "config_change": "Profile v18 changed request timeout 2000->8000 ms and max attempts 2->4 (exponential backoff)",
+    "deploy_time": "v2.14.0 rolled out 14:02-14:04 UTC on 2026-10-06; profile v18 loaded 14:04:00",
+    "release_alone_ok": "Latency stayed normal after the release while the gateway was healthy (14:04-14:19)",
+    "gateway_degraded": "Upstream gateway degradation on 2026-10-06 from ~14:19 to ~15:04 (attempts hang)",
+    "attempt_waits_timeout": "Under v18 each hung attempt waits ~8000 ms before the next try",
+    "db_maintenance": "orders-db reindex CHG-2291 14:10-14:41 raised CPU; orders-db-cpu alert",
+    "db_spans_small": "Database spans on slow requests are tens of ms at most",
+    "latency_high_after_db_recovered": "Latency stayed high after the database maintenance ended (14:41-15:04)",
+    "day_a_bounded": "The same gateway degradation on 2026-10-04 under v17 kept p95 near 2.5-4.2 s",
+    "safety_requirements": "Runbook payment safety requirements (fraud screening, idempotency keys)",
+    "mitigation_option": "Runbook option A: reversible runtime config profile rollback"
+  },
+  "probe_semantics": "literal/regex indicator; miss != absent, hit != used"
+}

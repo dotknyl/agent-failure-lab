@@ -1,0 +1,10 @@
+2026-10-04T14:04:00Z FIRING   payment-client-error-ratio value=12/19 threshold=10% for=2m severity=ticket service=checkout-api
+2026-10-04T14:11:00Z FIRING   checkout-latency-p95 value=4196ms threshold=3000ms for=3m severity=page service=checkout-api
+2026-10-04T14:26:00Z RESOLVED checkout-latency-p95 value=455ms threshold=3000ms for=3m severity=page service=checkout-api
+2026-10-04T14:26:00Z RESOLVED payment-client-error-ratio value=0/12 threshold=10% for=2m severity=ticket service=checkout-api
+2026-10-06T14:15:00Z FIRING   orders-db-cpu value=84% threshold=75% for=5m severity=warning service=orders-db
+2026-10-06T14:21:00Z FIRING   payment-client-error-ratio value=4/16 threshold=10% for=2m severity=ticket service=checkout-api
+2026-10-06T14:22:00Z FIRING   checkout-latency-p95 value=17093ms threshold=3000ms for=3m severity=page service=checkout-api
+2026-10-06T14:46:00Z RESOLVED orders-db-cpu value=32% threshold=75% for=5m severity=warning service=orders-db
+2026-10-06T15:06:00Z RESOLVED payment-client-error-ratio value=0/12 threshold=10% for=2m severity=ticket service=checkout-api
+2026-10-06T15:07:00Z RESOLVED checkout-latency-p95 value=504ms threshold=3000ms for=3m severity=page service=checkout-api

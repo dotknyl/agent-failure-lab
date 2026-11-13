@@ -1,0 +1,152 @@
+[
+  {
+    "artifact": "ticket",
+    "lines": [
+      [
+        1,
+        30
+      ]
+    ]
+  },
+  {
+    "artifact": "config-diff",
+    "lines": [
+      [
+        31,
+        32
+      ],
+      [
+        35,
+        36
+      ],
+      [
+        38,
+        43
+      ]
+    ]
+  },
+  {
+    "artifact": "release-notes",
+    "lines": [
+      [
+        15,
+        15
+      ],
+      [
+        17,
+        17
+      ]
+    ]
+  },
+  {
+    "artifact": "release-notes",
+    "lines": [
+      [
+        18,
+        18
+      ]
+    ]
+  },
+  {
+    "artifact": "provider-status",
+    "lines": [
+      [
+        7,
+        9
+      ]
+    ]
+  },
+  {
+    "artifact": "provider-status",
+    "lines": [
+      [
+        13,
+        14
+      ]
+    ]
+  },
+  {
+    "artifact": "alerts-log",
+    "lines": [
+      [
+        1,
+        10
+      ]
+    ]
+  },
+  {
+    "artifact": "db-change-log",
+    "lines": [
+      [
+        7,
+        7
+      ]
+    ]
+  },
+  {
+    "artifact": "runbook-payments",
+    "lines": [
+      [
+        5,
+        8
+      ]
+    ]
+  },
+  {
+    "artifact": "runbook-payments",
+    "lines": [
+      [
+        14,
+        17
+      ]
+    ]
+  },
+  {
+    "artifact": "checkout-metrics",
+    "lines": [
+      [
+        1,
+        1
+      ],
+      [
+        92,
+        226
+      ]
+    ]
+  },
+  {
+    "artifact": "db-metrics",
+    "lines": [
+      [
+        1,
+        1
+      ],
+      [
+        92,
+        226
+      ]
+    ]
+  },
+  {
+    "artifact": "traces-2026-10-06",
+    "lines": [
+      [
+        331,
+        338
+      ],
+      [
+        346,
+        353
+      ]
+    ]
+  },
+  {
+    "artifact": "payment-client-log",
+    "lines": [
+      [
+        184,
+        191
+      ]
+    ]
+  }
+]

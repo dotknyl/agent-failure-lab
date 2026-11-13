@@ -1,0 +1,125 @@
+{
+  "code": {
+    "src_sha256": "015dd8bbdefad68b20b710ee45a8d3d694962b47bc579a0fcde983a2acf3515f",
+    "src_files": 18,
+    "pyproject.toml_sha256": "0048ddcb453bd1ba07f891ae26e1c58fb9af151731911179bf9c87a91db89508",
+    "uv.lock_sha256": "1a6904596144891fa03a7e78fb30ad430d33f2876d72d4fb30802b3a5a6fcee0",
+    "git_head": null
+  },
+  "config_sha256": "62fc25853aee79df7ca5cbfe57a4b5648d4e4b7304604d83ccef87fe32ddb8aa",
+  "budget_ledger": {
+    "pilot_budget_usd": 3.0,
+    "max_cost_usd": 1.2,
+    "spent_upper_bound_usd": 0.002608,
+    "counted": [
+      "20261113T160830Z-probe-1bacc8",
+      "20261113T162346Z-probe-a6b41f",
+      "20261113T162545Z-probe-282f42"
+    ],
+    "unknown_cost": [],
+    "remaining_usd": 2.997393,
+    "effective_cap_usd": 1.2
+  },
+  "run_id": "20261113T162558Z-focused-ea1d97",
+  "provenance": "real",
+  "condition": "focused",
+  "parent": null,
+  "created_at": "2026-11-13T16:25:58.623958+00:00",
+  "fixture": {
+    "id": "checkout-latency-v1",
+    "bundle_sha256": "8e2ce089fc652954859304062485adb88ab45d7a9d786fdcd4fa0325cb4ff299",
+    "artifacts": {
+      "ticket": "f04f3a9ddc6bbeddbadf449ced9fbef6771b89dea5cf30036fbb2248f5bc8713",
+      "release-notes": "c5f06608c51ff739c9b220bbe332079be4b889db86d3749bb19cccdcab97e9e3",
+      "config-diff": "36e19b3c78779dea69414345134ffa695885762a8b53ff5a92bfec684624e449",
+      "checkout-metrics": "e3f3385a5e44fd98d920c8a242a0e12a90d28dc72afd26227f2245d67b8f1f33",
+      "traces-2026-10-04": "3855e26494af364fd69db81783d6472ebbf7a5f8f0d815038a585bdb0cec7f87",
+      "traces-2026-10-06": "3a7b3956d520308188784bb014f95b2940e9eb877e9dc070e30675f0aaa47e34",
+      "payment-client-log": "c65905e19c9c4d272a867b430bfe22c11d399c0c4691b0c1daa70e048191f47e",
+      "provider-status": "a945e7307433fb38750d392ca9d6181392a8ceb2414bac3b27ea90f9f506974c",
+      "db-metrics": "fd0d6db5d09ab738226514934e1e16f9a3f346a4606b76b378b1e14dd208ad3b",
+      "alerts-log": "4a02d5b307768c272c6d278c5f19691b51deaa6b97c9ee08fa0e3481fd966dcc",
+      "db-change-log": "9feb1ef8a9bbfd79d2f0392100d47ad19133c0176f835272079c890559fab211",
+      "runbook-payments": "7962680a441ddf066c063799568a84a8e53faa8fb078214f8969741986e7ae48"
+    }
+  },
+  "prompts": {
+    "version": "v1",
+    "sha256": {
+      "TASK": "55d04528f8300edb29620fd38f1eb22f14d76b4c90c7652fdd61bd2519e2d0e3",
+      "AGENT_SYSTEM": "3c7b06dc488cb9d6ff67fefee45bec49cf036cd890ead55a989454db794ba882",
+      "SUMMARY_SYSTEM": "ae81fdd07b30ecad4f2a113f0bae88dcad9cad5c63bb043c4cf82df69f5942e6",
+      "SUMMARY_USER": "75f1b65b8db27e3e24ebefd457a4d6cb77ecb7da66d43c6fa1b1211a8f67ac7f",
+      "FOCUSED_USER": "4720ee229b1e6ba04acafc8c1413b80ddc1719a6b5c0efd78a169128295f55f5"
+    }
+  },
+  "tool_schemas_sha256": "1eb88befa1918f0cee8a945c6197c0a47e222a85f9ed69c2c5c393eabc225c45",
+  "config": {
+    "provider": {
+      "integration": "openai-responses",
+      "base_url": "https://api.openai.com/v1",
+      "api_key_env": "OPENAI_API_KEY",
+      "model": "gpt-6-luna",
+      "stream": false,
+      "max_tokens_param": "max_completion_tokens",
+      "temperature": null,
+      "reasoning_effort": "medium",
+      "request_timeout_s": 180.0,
+      "max_retries": 1,
+      "require_usage": true
+    },
+    "context": {
+      "native_context_tokens": 922000,
+      "compaction_threshold_tokens": 30000,
+      "threshold_is_stress_setting": true,
+      "max_output_tokens": 12000,
+      "summary_max_output_tokens": 6000,
+      "summary_max_words": 900,
+      "keep_recent_groups": 2,
+      "retain_budget_tokens": 6000,
+      "chars_per_token": 3.0,
+      "compaction_enabled": true
+    },
+    "limits": {
+      "max_agent_requests": 40,
+      "max_tool_calls": 80,
+      "max_compactions": 6,
+      "max_total_tokens": 2000000
+    },
+    "budget": {
+      "pilot_budget_usd": 3.0,
+      "max_cost_usd": 1.2,
+      "allow_without_dollar_cap": false,
+      "input_usd_per_mtok": 0.25,
+      "cached_input_usd_per_mtok": null,
+      "output_usd_per_mtok": 1.25,
+      "pricing_source": "OpenAI list for gpt-6-luna (developers.openai.com/api/docs/models/gpt-6-luna), x2.5 safety margin",
+      "pricing_date": "2026-11-13",
+      "authorized_by": "owner (approved gpt-6-luna on the OpenAI API, Responses, medium effort, $3 total), 2026-11-13"
+    }
+  },
+  "versions": {
+    "python": "3.12.16",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "openai": "3.50.0",
+    "ctxlab": "0.1.0"
+  },
+  "disclosures": {
+    "native_context_tokens": 922000,
+    "compaction_threshold_tokens": 30000,
+    "threshold_is_stress_setting": true,
+    "token_estimate": "character heuristic, 3.0 chars/token; compare with provider-reported prompt_tokens in model_response events",
+    "provider_side": "Only the request payload and response body are observable. Provider-side transformations (truncation, caching, routing, hidden system prompts) are not."
+  },
+  "amendments": [
+    {
+      "date": "2026-11-13",
+      "fields": [
+        "config.budget.pricing_source",
+        "config.budget.authorized_by"
+      ],
+      "reason": "Annotation text named a different gateway in error; this run used config.provider.base_url https://api.openai.com/v1. Only free-text annotations changed; prices, payloads, responses and costs are as recorded.",
+      "original_config_sha256": "525cd736a0def106e0a4d3c6e7a025d7a197f21c058217df7e9e9c68f2256df9"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "fixture": "checkout-latency-v1",
+  "generator_seed": 20261006,
+  "artifacts": [
+    {
+      "id": "ticket",
+      "file": "artifacts/ticket.md",
+      "title": "Incident ticket INC-4821",
+      "kind": "markdown",
+      "description": "On-call incident ticket with symptoms, updates and investigation constraints.",
+      "lines": 30,
+      "chars": 1448,
+      "sha256": "f04f3a9ddc6bbeddbadf449ced9fbef6771b89dea5cf30036fbb2248f5bc8713"
+    },
+    {
+      "id": "release-notes",
+      "file": "artifacts/release-notes.md",
+      "title": "checkout-api release notes and deployment record",
+      "kind": "markdown",
+      "description": "Release notes for checkout-api v2.13.3 and v2.14.0, including the deployment record.",
+      "lines": 24,
+      "chars": 1194,
+      "sha256": "c5f06608c51ff739c9b220bbe332079be4b889db86d3749bb19cccdcab97e9e3"
+    },
+    {
+      "id": "config-diff",
+      "file": "artifacts/config-diff.patch",
+      "title": "checkout-api configuration diff v2.13.3 -> v2.14.0",
+      "kind": "unified-diff",
+      "description": "Unified diff of the deployed checkout-api configuration between the two releases.",
+      "lines": 50,
+      "chars": 1147,
+      "sha256": "36e19b3c78779dea69414345134ffa695885762a8b53ff5a92bfec684624e449"
+    },
+    {
+      "id": "checkout-metrics",
+      "file": "artifacts/checkout-metrics.csv",
+      "title": "checkout-api per-minute request metrics",
+      "kind": "csv",
+      "description": "Per-minute request count, 5xx count and latency percentiles for POST /checkout on 2026-10-04 and 2026-10-06 (UTC). Percentiles use the nearest-rank method over all requests in the minute.",
+      "lines": 226,
+      "chars": 10398,
+      "sha256": "e3f3385a5e44fd98d920c8a242a0e12a90d28dc72afd26227f2245d67b8f1f33"
+    },
+    {
+      "id": "traces-2026-10-04",
+      "file": "artifacts/traces-2026-10-04.jsonl",
+      "title": "Sampled checkout traces, 2026-10-04",
+      "kind": "jsonl",
+      "description": "One span per line (JSON). Head-sampled: 1 in 12 checkout requests. Spans of a trace are adjacent.",
+      "lines": 550,
+      "chars": 157211,
+      "sha256": "3855e26494af364fd69db81783d6472ebbf7a5f8f0d815038a585bdb0cec7f87"
+    },
+    {
+      "id": "traces-2026-10-06",
+      "file": "artifacts/traces-2026-10-06.jsonl",
+      "title": "Sampled checkout traces, 2026-10-06",
+      "kind": "jsonl",
+      "description": "One span per line (JSON). Head-sampled: 1 in 12 checkout requests. Spans of a trace are adjacent.",
+      "lines": 942,
+      "chars": 263813,
+      "sha256": "3a7b3956d520308188784bb014f95b2940e9eb877e9dc070e30675f0aaa47e34"
+    },
+    {
+      "id": "payment-client-log",
+      "file": "artifacts/payment-client.log",
+      "title": "checkout-api payment client log",
+      "kind": "log",
+      "description": "Payment gateway client log from all checkout-api instances (all requests, not sampled): non-ok authorization attempts, exhausted authorizations and configuration reports.",
+      "lines": 501,
+      "chars": 119037,
+      "sha256": "c65905e19c9c4d272a867b430bfe22c11d399c0c4691b0c1daa70e048191f47e"
+    },
+    {
+      "id": "provider-status",
+      "file": "artifacts/provider-status.md",
+      "title": "Payment gateway provider status history",
+      "kind": "markdown",
+      "description": "Export of the payment gateway provider's public status history.",
+      "lines": 22,
+      "chars": 1096,
+      "sha256": "a945e7307433fb38750d392ca9d6181392a8ceb2414bac3b27ea90f9f506974c"
+    },
+    {
+      "id": "db-metrics",
+      "file": "artifacts/orders-db-metrics.csv",
+      "title": "orders-db per-minute metrics",
+      "kind": "csv",
+      "description": "Per-minute CPU, query latency, connections, pool wait and replication lag for orders-db (UTC).",
+      "lines": 226,
+      "chars": 8174,
+      "sha256": "fd0d6db5d09ab738226514934e1e16f9a3f346a4606b76b378b1e14dd208ad3b"
+    },
+    {
+      "id": "alerts-log",
+      "file": "artifacts/alerts.log",
+      "title": "Alert notifications",
+      "kind": "log",
+      "description": "Alert state changes (FIRING/RESOLVED) for checkout-api, payment client and orders-db on both days.",
+      "lines": 10,
+      "chars": 1216,
+      "sha256": "4a02d5b307768c272c6d278c5f19691b51deaa6b97c9ee08fa0e3481fd966dcc"
+    },
+    {
+      "id": "db-change-log",
+      "file": "artifacts/db-change-log.md",
+      "title": "Database change log",
+      "kind": "markdown",
+      "description": "Change records for the orders-db cluster.",
+      "lines": 8,
+      "chars": 667,
+      "sha256": "9feb1ef8a9bbfd79d2f0392100d47ad19133c0176f835272079c890559fab211"
+    },
+    {
+      "id": "runbook-payments",
+      "file": "artifacts/runbook-payments.md",
+      "title": "Payments mitigation runbook",
+      "kind": "markdown",
+      "description": "Runbook for checkout payment incidents: safety requirements and mitigation procedures.",
+      "lines": 22,
+      "chars": 1692,
+      "sha256": "7962680a441ddf066c063799568a84a8e53faa8fb078214f8969741986e7ae48"
+    }
+  ]
+}

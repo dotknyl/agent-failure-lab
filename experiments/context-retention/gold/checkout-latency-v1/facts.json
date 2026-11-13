@@ -1,0 +1,30 @@
+{
+  "_note": "Critical facts for the evidence audit. Probes are literal/regex INDICATORS of whether a fact's text was present in a request, summary or answer. A probe miss does not prove absence (paraphrase), and a hit does not prove use. Manual review decides. Defined before any model run.",
+  "facts": [
+    {"id": "config_change", "description": "Profile v18 changed request timeout 2000->8000 ms and max attempts 2->4 (exponential backoff)",
+     "probes": ["request_timeout_ms:\\s*8000", "timeout\\D{0,30}8,?000", "8,?000\\s*ms", "max_attempts[:=\\s]+4", "attempt=\\d/4"]},
+    {"id": "deploy_time", "description": "v2.14.0 rolled out 14:02-14:04 UTC on 2026-10-06; profile v18 loaded 14:04:00",
+     "probes": ["14:0[24][^\\n]{0,100}(v18|v2\\.14|deploy|rollout|roll-out)", "(v18|v2\\.14|deploy|rollout|roll-out)[^\\n]{0,60}14:0[24]"]},
+    {"id": "release_alone_ok", "description": "Latency stayed normal after the release while the gateway was healthy (14:04-14:19)",
+     "probes": ["2026-10-06T14:(0[5-9]|1[0-8]):00Z,\\d+,\\d+,\\d+,\\d{3},", "Post-deploy checks passed"]},
+    {"id": "gateway_degraded", "description": "Upstream gateway degradation on 2026-10-06 from ~14:19 to ~15:04 (attempts hang)",
+     "probes": ["14:18-15:05", "2026-10-06T14:(19|2\\d)[^\\n]{0,200}outcome=timeout", "Some requests may not receive a response",
+                "2026-10-06T\\S+ (FIRING|RESOLVED)\\s+payment-client-error-ratio"]},
+    {"id": "attempt_waits_timeout", "description": "Under v18 each hung attempt waits ~8000 ms before the next try",
+     "probes": ["elapsed_ms=800\\d", "\"duration_ms\":800\\d"]},
+    {"id": "db_maintenance", "description": "orders-db reindex CHG-2291 14:10-14:41 raised CPU; orders-db-cpu alert",
+     "probes": ["CHG-2291", "REINDEX", "orders-db-cpu", "2026-10-06T14:\\d\\d:00Z,(8\\d|9\\d),"]},
+    {"id": "db_spans_small", "description": "Database spans on slow requests are tens of ms at most",
+     "probes": ["\"service\":\"orders-db\"[^\\n]{0,160}\"duration_ms\":\\d{1,2},", "(db|database)[ -]spans?"]},
+    {"id": "latency_high_after_db_recovered", "description": "Latency stayed high after the database maintenance ended (14:41-15:04)",
+     "probes": ["2026-10-06T(14:(4[1-9]|5\\d)|15:0[0-3]):00Z,\\d+,\\d+,\\d+,\\d{4,},",
+                "2026-10-06T(14:(4[1-9]|5\\d)|15:0[0-3]):00Z,[23]\\d,"]},
+    {"id": "day_a_bounded", "description": "The same gateway degradation on 2026-10-04 under v17 kept p95 near 2.5-4.2 s",
+     "probes": ["2026-10-04T14:(0[2-9]|1\\d|2[0-3]):00Z,\\d+,\\d+,\\d+,[2-4]\\d{3},", "elapsed_ms=200\\d", "14:01-14:25",
+                "\"duration_ms\":200\\d,", "2026-10-04T\\S+ (FIRING|RESOLVED)\\s"]},
+    {"id": "safety_requirements", "description": "Runbook payment safety requirements (fraud screening, idempotency keys)",
+     "probes": ["never waive", "reuse_across_attempts"]},
+    {"id": "mitigation_option", "description": "Runbook option A: reversible runtime config profile rollback",
+     "probes": ["cfgctl rollback"]}
+  ]
+}

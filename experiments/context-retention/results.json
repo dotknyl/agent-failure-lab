@@ -1,0 +1,409 @@
+{
+  "generated": "2026-11-13 16:45 UTC",
+  "runs": [
+    {
+      "run_id": "20261113T162558Z-focused-ea1d97",
+      "condition": "focused",
+      "parent": null,
+      "model": "gpt-6-luna",
+      "base_url": "https://api.openai.com/v1",
+      "stop_reason": "final_answer",
+      "compaction_tested": false,
+      "totals": {
+        "agent_requests": 1,
+        "summary_requests": 0,
+        "attempts": 1,
+        "failed_attempts": 0,
+        "tool_calls": 0,
+        "tool_errors": 0,
+        "compactions": 0,
+        "prompt_tokens": 12642,
+        "completion_tokens": 1891,
+        "cached_tokens": 0,
+        "reasoning_tokens": 848,
+        "summary_prompt_tokens": 0,
+        "summary_completion_tokens": 0,
+        "unreported_tokens_upper_bound": 0,
+        "cost_reported_usd": 0.00552425,
+        "cost_upper_bound_usd": 0.00552425
+      },
+      "tool_call_classification": {},
+      "review": {
+        "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+        "reviewed_at": "2026-11-13",
+        "criteria": {
+          "timeline": {
+            "verdict": "pass",
+            "notes": "Deploy 14:02-14:04 and checks 14:09, reindex 14:10-14:41, provider onset ~14:18, p95 spike 14:19, alerts 14:21-14:22, recovery ~15:04 with alerts resolved 15:06-15:07; citations correct."
+          },
+          "diagnosis": {
+            "verdict": "pass",
+            "notes": "Gateway degradation amplified by v18 (2,000 -> 8,000 ms, 2 -> 4 attempts) from config diff, 8,005 ms timed-out attempt spans and payment-client log. Did not use the 2026-10-04 comparison or the release-alone period; Uncertainty says the split is not isolated. Minor gap, not a fail."
+          },
+          "competing": {
+            "verdict": "pass",
+            "notes": "DB query p95 27-29 ms and DB spans small vs >8.5 s authorization; CPU normal at 14:41 while p95 still 26,147 ms (spot-checked)."
+          },
+          "mitigation": {
+            "verdict": "pass",
+            "notes": "Unconditional recommendation: with incident-commander approval revert only the payment-client profile v18 -> v17; reversible; fraud screening and idempotency preserved; circuit breaker only for full outage."
+          },
+          "references": {
+            "verdict": "pass",
+            "notes": "26/26 citations valid; spot-checked trace L331-L338 (8,695 ms, 8,005 ms timeout), db-metrics, checkout-metrics. Minor slip: other spans stated as 16-38 ms, actually 24-38 ms."
+          }
+        },
+        "verdict_values": [
+          "pass",
+          "partial",
+          "fail"
+        ],
+        "constraint_violation": false,
+        "failure_mode": "none",
+        "failure_mode_values": [
+          "none",
+          "evidence_missing_at_decision",
+          "evidence_present_misused",
+          "tool_or_provider_failure",
+          "resource_limit",
+          "not_testable",
+          "other"
+        ],
+        "failure_mode_notes": "Sanity condition (no tools, curated excerpts): the task is solvable from sufficient evidence. Not a comparison condition.",
+        "evidence_inspection": [
+          {
+            "fact": "mitigation_option",
+            "where": "final answer",
+            "event_seq": null,
+            "quote": "revert only the checkout-api payment-client runtime profile from v18 to v17"
+          }
+        ],
+        "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+        "suggested_failure_mode": {
+          "mode": "review",
+          "why": "facts not literally in final request: none; present in request but not literally in answer: ['gateway_degraded', 'attempt_waits_timeout', 'db_spans_small', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+        }
+      },
+      "threshold": 30000,
+      "native": 922000
+    },
+    {
+      "run_id": "20261113T163002Z-natural-8ea26b",
+      "condition": "natural",
+      "parent": null,
+      "model": "gpt-6-luna",
+      "base_url": "https://api.openai.com/v1",
+      "stop_reason": "final_answer",
+      "compaction_tested": true,
+      "totals": {
+        "agent_requests": 12,
+        "summary_requests": 2,
+        "attempts": 14,
+        "failed_attempts": 0,
+        "tool_calls": 42,
+        "tool_errors": 0,
+        "compactions": 2,
+        "prompt_tokens": 157631,
+        "completion_tokens": 8497,
+        "cached_tokens": 71693,
+        "reasoning_tokens": 2943,
+        "summary_prompt_tokens": 34572,
+        "summary_completion_tokens": 4305,
+        "unreported_tokens_upper_bound": 0,
+        "cost_reported_usd": 0.023952374999999998,
+        "cost_upper_bound_usd": 0.023952374999999998
+      },
+      "tool_call_classification": {
+        "new": 32,
+        "reread_after_compaction": 9,
+        "reread_while_present": 1
+      },
+      "review": {
+        "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+        "reviewed_at": "2026-11-13",
+        "criteria": {
+          "timeline": {
+            "verdict": "pass",
+            "notes": "Deploy/v18 14:04, reindex 14:10-14:41 and CPU alert 14:15, provider window ~14:18-15:05, first 8 s timeouts 14:19:19, recovery 15:04-15:07."
+          },
+          "diagnosis": {
+            "verdict": "pass",
+            "notes": "Gateway degradation amplified by v18 (2 s -> 8 s, 2 -> 4 attempts); span decomposition (26,298 ms trace with three ~8 s timeouts, spot-checked) and release-alone period (normal p95 through 14:18). Did not use the 2026-10-04 comparison although it was in the final request via summary 2."
+          },
+          "competing": {
+            "verdict": "pass",
+            "notes": "DB spans 17-28 ms vs 8.7-26.2 s authorization; DB query p95 24-30 ms; CPU 26% at 14:41 while checkout still slow."
+          },
+          "mitigation": {
+            "verdict": "partial",
+            "notes": "Owner decision 2026-11-13: partial. Correct option (payment-client profile-only rollback v18 -> v17, reversible, incident-commander approval, fraud screening and idempotency preserved), but the recommendation is conditional/non-committal while the ticket asks for a mitigation before recurrence. Wording: 'make no change now', roll back if it recurs."
+          },
+          "references": {
+            "verdict": "pass",
+            "notes": "27/27 citations valid; trace L376-L385 spot-checked exactly."
+          }
+        },
+        "verdict_values": [
+          "pass",
+          "partial",
+          "fail"
+        ],
+        "constraint_violation": false,
+        "failure_mode": "other",
+        "failure_mode_values": [
+          "none",
+          "evidence_missing_at_decision",
+          "evidence_present_misused",
+          "tool_or_provider_failure",
+          "resource_limit",
+          "not_testable",
+          "other"
+        ],
+        "failure_mode_notes": "Only shortfall is conditional mitigation phrasing; not an evidence or context failure. Both compactions kept the needed facts in paraphrase (audit 'literal facts lost' flags were probe misses); the agent still re-read 9 artifacts after compaction. Minor present-but-unused instance: the 2026-10-04 comparison was in summary 2 but not used.",
+        "evidence_inspection": [
+          {
+            "fact": "gateway_degraded",
+            "where": "summary 1",
+            "event_seq": 51,
+            "quote": "provider reports EU-1 authorization impact approximately **14:18\u201315:05**"
+          },
+          {
+            "fact": "day_a_bounded",
+            "where": "summary 2",
+            "event_seq": 81,
+            "quote": "Oct 4, on v2.13.3/profile 17, checkout p95 reached about **4.2 s**"
+          },
+          {
+            "fact": "latency_high_after_db_recovered",
+            "where": "summary 2",
+            "event_seq": 81,
+            "quote": "CPU returned to **26** at 14:41 while checkout remained slow afterward"
+          },
+          {
+            "fact": "mitigation_option",
+            "where": "final answer",
+            "event_seq": null,
+            "quote": "so **make no change now**"
+          }
+        ],
+        "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+        "suggested_failure_mode": {
+          "mode": "review",
+          "why": "facts not literally in final request: none; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+        }
+      },
+      "threshold": 37000,
+      "native": 922000
+    },
+    {
+      "run_id": "20261113T163542Z-natural-284440",
+      "condition": "natural",
+      "parent": null,
+      "model": "gpt-6-luna",
+      "base_url": "https://api.openai.com/v1",
+      "stop_reason": "final_answer",
+      "compaction_tested": true,
+      "totals": {
+        "agent_requests": 5,
+        "summary_requests": 1,
+        "attempts": 6,
+        "failed_attempts": 0,
+        "tool_calls": 20,
+        "tool_errors": 0,
+        "compactions": 1,
+        "prompt_tokens": 61686,
+        "completion_tokens": 4456,
+        "cached_tokens": 6508,
+        "reasoning_tokens": 1577,
+        "summary_prompt_tokens": 20028,
+        "summary_completion_tokens": 2477,
+        "unreported_tokens_upper_bound": 0,
+        "cost_reported_usd": 0.009938750000000001,
+        "cost_upper_bound_usd": 0.009938750000000001
+      },
+      "tool_call_classification": {
+        "new": 19,
+        "reread_while_present": 1
+      },
+      "review": {
+        "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+        "reviewed_at": "2026-11-13",
+        "criteria": {
+          "timeline": {
+            "verdict": "pass",
+            "notes": "Deploy/v18 14:04, reindex from 14:10, p95 472 -> 8,724 ms at 14:18-14:19, alerts 14:21-14:22, 8 s timeouts 14:20-14:22, CPU 26% at 14:41, recovery 15:04-15:09. Minor: config change placed in the 14:10 bullet."
+          },
+          "diagnosis": {
+            "verdict": "pass",
+            "notes": "Gateway degradation amplified by v18, from provider window, payment-client log (8 s timeouts and retries under v18) and config diff, contrasted with v17 log lines (2 s timeouts, at most 2 attempts). Did not examine slow trace spans."
+          },
+          "competing": {
+            "verdict": "pass",
+            "notes": "DB query p95 24-30 ms and pool wait 1-3 ms during high CPU; checkout stayed slow after CPU normalised. No DB span evidence (run never read slow traces)."
+          },
+          "mitigation": {
+            "verdict": "partial",
+            "notes": "Owner decision 2026-11-13: partial. Correct option (payment-client profile-only rollback v18 -> v17, reversible, incident-commander approval, fraud screening and idempotency preserved), but the recommendation is conditional/non-committal while the ticket asks for a mitigation before recurrence. Wording: 'Evaluate a payment-client profile-only rollback'."
+          },
+          "references": {
+            "verdict": "pass",
+            "notes": "25/25 citations valid; several citations were carried from the summary without re-reading and point to the correct lines."
+          }
+        },
+        "verdict_values": [
+          "pass",
+          "partial",
+          "fail"
+        ],
+        "constraint_violation": false,
+        "failure_mode": "other",
+        "failure_mode_values": [
+          "none",
+          "evidence_missing_at_decision",
+          "evidence_present_misused",
+          "tool_or_provider_failure",
+          "resource_limit",
+          "not_testable",
+          "other"
+        ],
+        "failure_mode_notes": "Only shortfall is non-committal mitigation phrasing; not an evidence or context failure. Answered immediately after its single compaction with no re-reads; facts flagged NOT FOUND (literal) were present in the summary in paraphrase.",
+        "evidence_inspection": [
+          {
+            "fact": "latency_high_after_db_recovered",
+            "where": "summary 1",
+            "event_seq": 53,
+            "quote": "checkout latency stayed high after CPU returned to normal while the provider impact window continued"
+          },
+          {
+            "fact": "mitigation_option",
+            "where": "summary 1",
+            "event_seq": 53,
+            "quote": "Smallest reversible candidate to evaluate is rolling back only the payment-client runtime profile to v17"
+          },
+          {
+            "fact": "safety_requirements",
+            "where": "summary 1",
+            "event_seq": 53,
+            "quote": "Do not disable fraud screening or change its timeout behavior."
+          },
+          {
+            "fact": "mitigation_option",
+            "where": "final answer",
+            "event_seq": null,
+            "quote": "Evaluate a **payment-client profile-only rollback from v18 to v17**"
+          }
+        ],
+        "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+        "suggested_failure_mode": {
+          "mode": "review",
+          "why": "facts not literally in final request: ['db_spans_small', 'latency_high_after_db_recovered', 'safety_requirements', 'mitigation_option']; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'day_a_bounded']"
+        }
+      },
+      "threshold": 37000,
+      "native": 922000
+    },
+    {
+      "run_id": "20261113T163628Z-natural-a077c6",
+      "condition": "natural",
+      "parent": null,
+      "model": "gpt-6-luna",
+      "base_url": "https://api.openai.com/v1",
+      "stop_reason": "final_answer",
+      "compaction_tested": true,
+      "totals": {
+        "agent_requests": 7,
+        "summary_requests": 2,
+        "attempts": 9,
+        "failed_attempts": 0,
+        "tool_calls": 29,
+        "tool_errors": 0,
+        "compactions": 2,
+        "prompt_tokens": 101899,
+        "completion_tokens": 7249,
+        "cached_tokens": 32859,
+        "reasoning_tokens": 2320,
+        "summary_prompt_tokens": 25156,
+        "summary_completion_tokens": 3850,
+        "unreported_tokens_upper_bound": 0,
+        "cost_reported_usd": 0.016361875,
+        "cost_upper_bound_usd": 0.016361875
+      },
+      "tool_call_classification": {
+        "new": 18,
+        "reread_while_present": 2,
+        "reread_after_compaction": 9
+      },
+      "review": {
+        "reviewer": "Claude Opus 5.5 (assistant) on owner instruction, from recorded requests/summaries/answers with cited-line spot checks; mitigation verdict for natural runs decided by the owner",
+        "reviewed_at": "2026-11-13",
+        "criteria": {
+          "timeline": {
+            "verdict": "pass",
+            "notes": "Deploy/v18 14:04, reindex 14:10-14:41, provider onset ~14:18, alert 14:22, slow traces 14:22-14:24, provider resolution 14:51-15:09, alert resolved 15:07."
+          },
+          "diagnosis": {
+            "verdict": "pass",
+            "notes": "Gateway degradation amplified by v18 (2,000 -> 8,000 ms, 2 -> 4 attempts) with span decomposition and the 2026-10-04 comparison (~4.2 s under v17); notes v18 is an amplifier, not sole cause."
+          },
+          "competing": {
+            "verdict": "pass",
+            "notes": "DB query p95 and pool wait low, DB spans 24/30 ms vs 8,562 ms authorization, and normal DB metrics during the 2026-10-04 spike. Minor: query p95 stated as 14-30 ms for the reindex window."
+          },
+          "mitigation": {
+            "verdict": "partial",
+            "notes": "Owner decision 2026-11-13: partial. Correct option (payment-client profile-only rollback v18 -> v17, reversible, incident-commander approval, fraud screening and idempotency preserved), but the recommendation is conditional/non-committal while the ticket asks for a mitigation before recurrence. Wording: 'If the problem recurs and persists, recommend ...'; it does note the payment-failure tradeoff."
+          },
+          "references": {
+            "verdict": "pass",
+            "notes": "31/31 citations valid."
+          }
+        },
+        "verdict_values": [
+          "pass",
+          "partial",
+          "fail"
+        ],
+        "constraint_violation": false,
+        "failure_mode": "other",
+        "failure_mode_values": [
+          "none",
+          "evidence_missing_at_decision",
+          "evidence_present_misused",
+          "tool_or_provider_failure",
+          "resource_limit",
+          "not_testable",
+          "other"
+        ],
+        "failure_mode_notes": "Only shortfall is conditional mitigation phrasing; not an evidence or context failure. Both summaries kept the needed facts (audit literal-loss flags were probe misses); the agent re-read 9 artifacts after compaction #2.",
+        "evidence_inspection": [
+          {
+            "fact": "day_a_bounded",
+            "where": "summary 2",
+            "event_seq": 55,
+            "quote": "On Oct 4, while release 2.13.3 was running, checkout p95 rose to 4197 ms at 14:02 and remained around 4.2 s"
+          },
+          {
+            "fact": "mitigation_option",
+            "where": "summary 1",
+            "event_seq": 37,
+            "quote": "Runbook permits a fully reversible payment-client runtime-profile rollback, applied within ~60 s, with incident commander approval."
+          },
+          {
+            "fact": "mitigation_option",
+            "where": "final answer",
+            "event_seq": null,
+            "quote": "If the problem recurs and persists, recommend an incident-commander-approved rollback"
+          }
+        ],
+        "evidence_inspection_rule": "Required before failure_mode is evidence_missing_at_decision or evidence_present_misused: one entry per fact relied on, from reading the actual request/summary, not from probe results. Entry: {\"fact\": <facts.json id>, \"where\": \"agent request N\" | \"summary N\" | \"final answer\", \"event_seq\": <seq in events.jsonl>, \"quote\": <exact supporting text, or 'absent after reading the whole message'>}. The report marks these modes UNSUPPORTED without it.",
+        "suggested_failure_mode": {
+          "mode": "review",
+          "why": "facts not literally in final request: none; present in request but not literally in answer: ['gateway_degraded', 'attempt_waits_timeout', 'db_spans_small', 'latency_high_after_db_recovered', 'day_a_bounded', 'safety_requirements', 'mitigation_option']"
+        }
+      },
+      "threshold": 37000,
+      "native": 922000
+    }
+  ],
+  "skipped": []
+}

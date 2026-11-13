@@ -1,0 +1,25 @@
+[project]
+name = "ctxlab"
+version = "0.1.0"
+description = "Context retention failure lab: missing vs present-but-misused tool evidence in an agent incident investigation"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=3.50.0",
+]
+
+[project.scripts]
+ctxlab = "ctxlab.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.13.8,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

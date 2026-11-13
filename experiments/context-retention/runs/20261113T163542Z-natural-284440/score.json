@@ -1,0 +1,129 @@
+{
+  "run_id": "20261113T163542Z-natural-284440",
+  "provenance": "real",
+  "condition": "natural",
+  "stop_reason": "final_answer",
+  "compaction_tested": true,
+  "final_answer_present": true,
+  "indicator_semantics": "signals for the reviewer; review.json verdicts are authoritative",
+  "sections_present": [
+    "Timeline",
+    "Best-supported cause",
+    "Competing explanation",
+    "Recommended mitigation",
+    "Uncertainty"
+  ],
+  "citations": {
+    "total": 25,
+    "valid": 25,
+    "invalid": []
+  },
+  "criteria": {
+    "timeline": {
+      "section_present": true,
+      "indicators": {
+        "release_time": true,
+        "gateway_onset": true,
+        "latency_alert": true,
+        "db_window": true,
+        "recovery": true
+      },
+      "citations": 13,
+      "citations_valid": 13,
+      "support_facts_cited": [
+        "db_maintenance",
+        "deploy_time",
+        "gateway_degraded",
+        "latency_alert",
+        "recovery"
+      ],
+      "support_facts_expected": [
+        "deploy_time",
+        "gateway_degraded",
+        "db_maintenance",
+        "recovery",
+        "latency_alert"
+      ]
+    },
+    "diagnosis": {
+      "section_present": true,
+      "indicators": {
+        "timeout_value": true,
+        "attempts_value": false,
+        "upstream": true,
+        "amplification": true,
+        "contrast": true
+      },
+      "citations": 3,
+      "citations_valid": 3,
+      "support_facts_cited": [
+        "attempt_waits_timeout",
+        "config_change",
+        "gateway_degraded"
+      ],
+      "support_facts_expected": [
+        "config_change",
+        "attempt_waits_timeout",
+        "gateway_degraded",
+        "day_a_bounded",
+        "release_alone_ok"
+      ]
+    },
+    "competing": {
+      "section_present": true,
+      "indicators": {
+        "names_db": true,
+        "span_evidence": false,
+        "timing_evidence": true
+      },
+      "citations": 4,
+      "citations_valid": 4,
+      "support_facts_cited": [
+        "db_maintenance",
+        "latency_high_after_db_recovered"
+      ],
+      "support_facts_expected": [
+        "db_spans_small",
+        "latency_high_after_db_recovered",
+        "db_maintenance"
+      ]
+    },
+    "mitigation": {
+      "section_present": true,
+      "indicators": {
+        "profile_rollback": true,
+        "bounded_values": false,
+        "reversible": true
+      },
+      "citations": 3,
+      "citations_valid": 3,
+      "support_facts_cited": [
+        "mitigation_option",
+        "safety_requirements"
+      ],
+      "support_facts_expected": [
+        "mitigation_option",
+        "safety_requirements",
+        "config_change"
+      ]
+    },
+    "references": {
+      "section_present": true,
+      "indicators": {},
+      "citations": 25,
+      "citations_valid": 25,
+      "support_facts_cited": [],
+      "support_facts_expected": []
+    }
+  },
+  "constraint_flags": [
+    {
+      "flag": "fraud_screening",
+      "line": "Evaluate a **payment-client profile-only rollback from v18 to v17**, rather than rolling back the entire release. The runbook describes this config rollback as reversible and taking about 60 seconds, with incident-commander approval required. Preserve retries with the same idempotency key and do not"
+    }
+  ],
+  "suggested_failure_mode": {
+    "mode": "review",
+    "why": "facts not literally in final request: ['db_spans_small', 'latency_high_after_db_recovered', 'safety_requirements', 'mitigation_option']; present in request but not literally in answer: ['config_change', 'gateway_degraded', 'attempt_waits_timeout', 'day_a_bounded']"
+  }
+}
