@@ -149,14 +149,14 @@ Run 2, [`20261113T163542Z-natural-284440`](runs/20261113T163542Z-natural-284440/
    - Runs 1 and 3 had the full L20 back in their final requests, raw, through re-reading the ticket (result seq
      105 and seq 69). They hedged anyway ("make no change now"; "If the problem recurs and persists, recommend…").
      Run 3 even cited `[ticket:L19-L20]` to justify waiting. So the line's presence did not prevent the hedge.
-   - A competing explanation fits run 2 equally well: its answer echoes its summary's "candidate to evaluate". That
-     is untested (see the deferred experiment in the audit).
+   - Another explanation is also consistent with run 2: its answer echoes its summary's "candidate to evaluate".
+     That is untested too (see the deferred experiment in the audit).
    - Each run is a single sample, and the encrypted reasoning items cannot be read.
 
 **Observed:** the summarizer had the qualifier and omitted it, and run 2 decided without it.
 **Not established:** that the omission changed the decision.
 **What would establish it:** the same final request with only the qualifier restored, sampled repeatedly. This
-was not run.
+was not run and is not planned.
 
 ### Example B: a summary that contradicts the retained context
 
@@ -172,13 +172,19 @@ Run 3, [`20261113T163628Z-natural-a077c6`](runs/20261113T163628Z-natural-a077c6/
    - L132 `2026-10-06T14:10:00Z,90,28,20,1,402` (CPU 90%, query p95 28 ms, pool wait 1 ms);
    - L163 `2026-10-06T14:41:00Z,26,18,14,1,266`.
 
-   The summarizer's input (seq 53) held none of the six retained results, which is why its inventory is wrong.
-3. **The assembled context (final request seq 80):**
-   - system prompt and pinned task;
+   The summarizer's input (seq 53) held none of the six retained results. That is consistent with how the summary
+   prompt works: it is given only "the earlier investigation steps that are being removed" (`SUMMARY_USER` in
+   [`src/ctxlab/prompts.py`](src/ctxlab/prompts.py)).
+3. **The context the agent acted in.** Agent request 5 (seq 56) is the request in which the agent chose its next
+   step. It holds exactly 10 messages:
+   - system prompt;
+   - pinned task;
    - summary 2;
-   - the retained request-4 group: checkout metrics L120-199, DB metrics L120-199, slow traces L331-360, two
-     payment-log searches and Oct 4 traces L20-44;
-   - two later groups of reads (below).
+   - the retained request-4 group: one assistant turn, then six results (checkout metrics L120-199, DB metrics
+     L120-199, slow traces L331-360, two payment-log searches, Oct 4 traces L20-44).
+
+   The final request (seq 80) still contains that retained group, followed by the two groups of reads described
+   below.
 4. **What the agent did next.**
    - It did **not** re-read DB rows 120-199. After the compaction it re-read nine earlier ranges (seq 58-76): the
      db-metrics header (L1-8), seven small artifacts and the Oct 4 checkout rows (L32-60). It also read
@@ -204,6 +210,8 @@ repository and run it from `experiments/context-retention/` with the Lab's Pytho
 
 ```python
 import json, sys
+
+sys.stdout.reconfigure(encoding="utf-8")  # summaries contain characters such as "→"
 
 run, needle = sys.argv[1], (sys.argv[2] if len(sys.argv) > 2 else None)
 ev = [json.loads(line) for line in open(f"{run}/events.jsonl", encoding="utf-8")]
@@ -235,7 +243,8 @@ Run it in two ways:
 - `uv run python show_context.py runs/20261113T163542Z-natural-284440 "before this happens again"` lists every event that
   carries the qualifier (seq 9, 22, 38, 50, 51 in run 2, and nothing after the compaction).
 - Without the second argument, it prints each compaction's retained results, each summary in full, and the final
-  request message by message, which is all Example B needs.
+  request message by message. For Example B's request 5, read event seq 56 of run 3 the same way: its
+  `payload.messages` holds the 10 messages listed above.
 
 Re-checked for this guide (2026-11-14, assistant-assisted), each against the raw events:
 
@@ -245,7 +254,7 @@ Re-checked for this guide (2026-11-14, assistant-assisted), each against the raw
 | The qualifier is absent from R2's final request and raw in R1's and R3's | Final agent requests: R2 seq 54, R1 seq 116, R3 seq 80 | Confirmed |
 | Summaries contradict retained results | `retained_tool_call_ids` at each `compaction_started` vs. the summary's inventory | Confirmed at R1 C1, R2 C1, R3 C1 and R3 C2. No contradiction at R1 C2 |
 | The summarizer never sees retained results | Summary requests R1 seq 49, 79; R2 seq 51; R3 seq 35, 53 | Confirmed. R2's one apparent match is the duplicated search, also present in the summarized part |
-| Duplicate vs. verification reads | `tool_call` arguments and read ranges | One identical call (R2 seq 32/48, before compaction). Re-read overlaps and citation counts as in section 3 |
+| Duplicate vs. verification reads | Identical `tool_call` name and arguments. For each read the audit classifies as a re-read, its overlap with earlier read ranges. Each distinct final citation range sorted into: the same as a summary citation, within a range re-read after compaction, or within another raw read in the final request | One identical call (R2 seq 32/48, before compaction). 17 of 18 post-compaction re-reads fully overlap (one: 55 of 57 lines). Three "while present" flags overlap by one line. Citation ranges: R1 9 / 9 / 7 of 25, R2 16 / 0 / 0 of 16, R3 5 / 14 / 7 of 26 |
 | Example B's cited rows | `orders-db-metrics.csv` L132-L163 and R3 result seq 43 | CPU 80-92% through 14:40 confirmed; query p95 18-30 ms (the answer says 14-30) |
 
 **What remains uncertain:** whether summary framing or the omitted qualifier affects decisions, anything hidden
