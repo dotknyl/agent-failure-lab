@@ -1,6 +1,7 @@
-"""Offline replay, evidence audit, scoring and report provenance gates (MOCK runs only)."""
+"""Offline replay, evidence audit, scoring and report provenance gates (MOCK runs; the table check reads real runs)."""
 
 import json
+import re
 
 from conftest import ScriptedClient, final, summary, tool_calls
 from ctxlab.audit import analyze, render
@@ -107,6 +108,17 @@ def test_report_refuses_mock_runs(cfg, tmp_path):
     text = build(runs, out_dir=tmp_path)
     assert "No real model runs are recorded yet" in text and "provenance 'mock'" in text
     assert (tmp_path / "REPORT.md").exists()
+
+
+def test_report_table_columns_match(tmp_path):
+    # Built from the committed real runs into tmp_path; the repository's REPORT.md is not touched.
+    text = build(out_dir=tmp_path)
+    table = [line for line in text.splitlines() if line.startswith("|")]
+    cells = lambda line: re.split(r"(?<!\\)\|", line.strip())[1:-1]
+    header, separator, rows = cells(table[0]), cells(table[1]), [cells(line) for line in table[2:]]
+    assert rows, "the table must have data rows, not only a header"
+    assert all(re.fullmatch(r":?-{3,}:?", c.strip()) for c in separator)
+    assert {len(separator), *map(len, rows)} == {len(header)}
 
 
 def test_continuation_from_recorded_request(cfg, tmp_path):
