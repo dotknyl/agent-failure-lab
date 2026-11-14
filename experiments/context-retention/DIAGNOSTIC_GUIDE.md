@@ -19,7 +19,7 @@ You can't diagnose a context failure in an agent that doesn't record its context
 
 | Record | Why you need it | In this Lab (`events.jsonl`) |
 |---|---|---|
-| **The exact outgoing model request**, every time, logged at the last point before the provider call | It is the strongest application-side evidence of what the model was given. Logs of tool calls, memory stores or summaries are not | `model_request.payload` (as assembled) and `wire_payload` (as the client sent it) |
+| **The exact outgoing model request**, every time, logged at the last point before the provider call | It is the strongest application-side evidence of what the model was given. Logs of tool calls, memory stores or summaries are not | `model_request.payload` (as assembled) and `wire_payload` (provider-shaped arguments passed to the SDK) |
 | **Each tool call and its full result**, joined by a correlation id | Lets you tell "never fetched" apart from "fetched, then lost" | `tool_call` / `tool_result`, joined by `call_id` |
 | **The bounds of every result** (clipped, paged, a size budget) | Truncation must be visible in the result itself, not inferred later | The read header: `lines a-b of N`, `bounded_by`, `has_more` |
 | **Every context transformation**: which messages were dropped, summarized or kept verbatim, by id | Lets you trace a fact from the tool result to its removal | `compaction_started` (`summarized_tool_call_ids`, `retained_tool_call_ids`) |
@@ -29,12 +29,13 @@ You can't diagnose a context failure in an agent that doesn't record its context
 
 Framework-independent rule: log the message list where your code hands it to the model client. A wrapper around the
 client works with any framework. Logging upstream, before trimming, memory injection or summarization, records
-what you *meant* to send, not what was sent.
+what you *meant* to send, not what was handed to the client.
 
-Keep three layers apart: what your application assembled, what the client or SDK actually sent (it may convert
-or add fields), and what the provider processed. The last is usually not observable: provider-side truncation,
-filtering or caching does not show in your logs. The recorded request proves what was sent, not that the model
-read every part of it unchanged.
+Keep four layers apart: the payload your application assembled, the provider-shaped arguments it passed to the
+SDK, the final HTTP request the SDK sent (which may add or convert fields), and what the provider processed. This
+Lab records the first two. The recorded payload shows what the application submitted to the SDK. It does not
+capture the final HTTP request or establish exactly what the provider processed; provider-side truncation,
+filtering or caching does not show in your logs.
 
 **Treat these traces as sensitive.** Full requests and tool results can contain API keys, credentials, personal
 data, proprietary content or another tenant's data. Store them under access control with a retention limit, and do
