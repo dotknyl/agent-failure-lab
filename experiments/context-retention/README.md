@@ -10,6 +10,11 @@ compaction, records exactly what reached the model at every step, and lets you t
 > benchmark, and not published as an AgentProbe Lab.** One focused sanity run and three natural investigations
 > with `gpt-6-luna` on one synthetic incident. Nothing here estimates a failure rate or generalizes beyond this
 > model, incident and configuration.
+>
+> Two kinds of numbers appear here; do not mix them. **Fixture properties** (simulated checkout latency, attempt
+> durations, alert times; `gold/.../derived.json`, `explanation.md`) describe the synthetic incident and are known
+> by construction. **Agent outcomes** (task success, compactions, re-reads, tokens, cost) come only from the
+> recorded live runs in `runs/`.
 
 **Reading order:**
 
@@ -20,11 +25,6 @@ compaction, records exactly what reached the model at every step, and lets you t
 4. [`PILOT_AUDIT.md`](PILOT_AUDIT.md) and [`runs/`](runs/): every compaction boundary and the original evidence.
    [`REPORT.md`](REPORT.md) / [`results.json`](results.json) hold the generated table.
 5. [Quick start](#quick-start-offline): reproduce the offline checks.
->
-> Two kinds of numbers appear here; do not mix them. **Fixture properties** (simulated checkout latency, attempt
-> durations, alert times; `gold/.../derived.json`, `explanation.md`) describe the synthetic incident and are known
-> by construction. **Agent outcomes** (task success, compactions, re-reads, tokens, cost) come only from the
-> recorded live runs in `runs/`.
 
 ## Three ways to use it
 
