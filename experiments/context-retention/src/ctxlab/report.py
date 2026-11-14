@@ -72,7 +72,7 @@ def build(runs_dir: Path = RUNS_DIR, out_dir: Path | None = None) -> str:
         lines += ["| Run | Condition | Model | Stop | Compactions | Agent req. | Tool calls (new / reread after "
                   "compaction / reread while present / dup) | Prompt tokens (summary) | Completion tokens | Cost "
                   "reported (upper bound) | " + " | ".join(crit_ids) + " | Failure mode |",
-                  "|" + "---|" * (9 + len(crit_ids) + 1)]
+                  "|" + "---|" * (10 + len(crit_ids) + 1)]
         for r in rows:
             t = r["totals"] or {}
             c = r["tool_call_classification"]

@@ -1,9 +1,9 @@
 # Context retention Lab: results
 
-Generated 2026-11-13 16:45 UTC from `runs/` by `ctxlab report`.
+Generated 2026-11-14 04:07 UTC from `runs/` by `ctxlab report`.
 
 | Run | Condition | Model | Stop | Compactions | Agent req. | Tool calls (new / reread after compaction / reread while present / dup) | Prompt tokens (summary) | Completion tokens | Cost reported (upper bound) | timeline | diagnosis | competing | mitigation | references | Failure mode |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `20261113T162558Z-focused-ea1d97` | focused | gpt-6-luna | final_answer | 0 | 1 | 0 / 0 / 0 / 0 | 12642 (0) | 1891 | $0.0055 ($0.0055) | pass | pass | pass | pass | pass | none |
 | `20261113T163002Z-natural-8ea26b` | natural | gpt-6-luna | final_answer | 2 | 12 | 32 / 9 / 1 / 0 | 157631 (34572) | 8497 | $0.0240 ($0.0240) | pass | pass | pass | partial | pass | other |
 | `20261113T163542Z-natural-284440` | natural | gpt-6-luna | final_answer | 1 | 5 | 19 / 0 / 1 / 0 | 61686 (20028) | 4456 | $0.0099 ($0.0099) | pass | pass | pass | partial | pass | other |
